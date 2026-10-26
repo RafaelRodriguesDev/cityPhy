@@ -3,14 +3,17 @@ import type { CityphyConfig } from '../config/loadConfig.ts';
 import { flag } from '../cli/args.ts';
 import { readOptions, writeOptions } from '../memory/options.ts';
 import { findProject, projectDir } from '../memory/paths.ts';
-import { writeClaudeHooks, writeRulesBlock } from './agentRules.ts';
+import { existsSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { CLAUDE_SETTINGS, SKILL_FILES, removeProjectClaudeHooks, removeProjectRules, writeClaudeGlobalHooks, writeSkill } from './agentRules.ts';
 import { createAsker, parseAnswers } from './askUser.ts';
 import { detectAgents } from './detectAgents.ts';
 import { checkRequirements } from './requirements.ts';
 
 /**
  * `cityphy setup`: 1) requirements (installs only with permission), 2) per project, the opt-in
- * questions, 3) the agent's rules (AGENTS.md block; Claude also gets hooks), each write asked first.
+ * questions, 3) global rules for each agent (a "cityphy" skill; Claude also gets global hooks), each
+ * write asked first. Nothing is written inside the projects; old project blocks/hooks can be removed.
  */
 export async function setupCommand(config: CityphyConfig, args: string[]): Promise<number> {
   const asker = createAsker(parseAnswers(flag(args, '--answers')), args.includes('--yes'));
@@ -50,12 +53,26 @@ export async function setupCommand(config: CityphyConfig, args: string[]): Promi
       writeOptions(dir, o);
       console.log(`   opções salvas em ${dir}`);
 
-      if (await asker.yesNo(`Posso escrever o bloco do cityPhy no AGENTS.md de ${project.name}?`, false, 'rules')) {
-        console.log(`   ${writeRulesBlock(project)}`);
+      // Older versions wrote inside the project; offer to take it out.
+      const oldRules = existsSync(join(project.path, 'AGENTS.md')) && readFileSync(join(project.path, 'AGENTS.md'), 'utf8').includes('cityphy:start');
+      if (oldRules && (await asker.yesNo(`Remover o bloco antigo do cityPhy do AGENTS.md de ${project.name}?`, true, 'cleanRules'))) {
+        console.log(`   limpo: ${removeProjectRules(project)}`);
       }
-      if (agents.includes('claude') && o.memory && (await asker.yesNo(`Posso ligar os hooks do Claude Code em ${project.name}/.claude/settings.local.json?`, false, 'hooks'))) {
-        console.log(`   ${writeClaudeHooks(project)}`);
+      const oldHooks = join(project.path, '.claude', 'settings.local.json');
+      if (existsSync(oldHooks) && readFileSync(oldHooks, 'utf8').includes('hook claude') && (await asker.yesNo(`Remover os hooks antigos do cityPhy de ${project.name}/.claude/settings.local.json?`, true, 'cleanHooks'))) {
+        console.log(`   limpo: ${removeProjectClaudeHooks(project)}`);
       }
+    }
+
+    // Global, once per agent: nothing is written inside the projects.
+    console.log('\n== Regras globais das IAs ==');
+    for (const a of agents) {
+      const path = SKILL_FILES[a];
+      if (!path) continue;
+      if (await asker.yesNo(`Instalar a skill global do cityPhy para ${a} em ${path}?`, false, `skill:${a}`)) console.log(`   ${writeSkill(a)}`);
+    }
+    if (agents.includes('claude') && (await asker.yesNo(`Ligar os hooks do cityPhy no Claude Code (${CLAUDE_SETTINGS})? Valem em toda pasta; fora dos projetos do cityPhy não fazem nada.`, false, 'hooks'))) {
+      console.log(`   ${writeClaudeGlobalHooks()}`);
     }
     console.log('\nPronto. Rode "cityphy refresh" e depois "cityphy dev".');
     return 0;

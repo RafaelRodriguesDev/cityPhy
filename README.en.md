@@ -131,10 +131,12 @@ npm run dev                  # http://127.0.0.1:5190
 3. Put a short summary of recent work at the start of each session? Token budget? *(default 800)*
 4. Log the token savings of each graph query?
 5. Use a local model (Ollama) for summaries? *(default no)*
-6. May cityPhy write its short rules block into the project's `AGENTS.md`?
-7. *(Claude Code)* May it add the cityPhy hooks to `<project>/.claude/settings.local.json`?
+6. May it install the global `cityphy` skill for each agent (`~/.claude/skills`, `~/.codex/skills`, `~/.gemini/config/skills`)?
+7. *(Claude Code)* May it turn on the cityPhy hooks in `~/.claude/settings.json`? Outside cityPhy projects they do nothing.
 
-An agent that opens a project with the cityPhy block and is not registered yet asks **you** these questions in chat and
+**Nothing is written inside your projects.** The project list lives only in `cityphy.config.json`; agents find the project from the open folder.
+
+An agent with the `cityphy` skill that opens a project it is not registered for asks **you** these questions in chat and
 then runs `cityphy setup --project <p> --agent <its id> --answers graph=sim,memory=sim,...`.
 
 ## Commands

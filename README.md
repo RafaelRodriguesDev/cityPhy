@@ -130,10 +130,12 @@ npm run dev                  # http://127.0.0.1:5190
 3. Colocar um resumo do trabalho recente no início de cada sessão? Com qual teto? *(padrão 800 tokens)*
 4. Registrar a economia de tokens de cada consulta ao grafo?
 5. Usar um modelo local (Ollama) para resumos? *(padrão: não)*
-6. Pode escrever o bloco curto de regras do cityPhy no `AGENTS.md` do projeto?
-7. *(Claude Code)* Pode ligar os hooks do cityPhy em `<projeto>/.claude/settings.local.json`?
+6. Pode instalar a skill global `cityphy` em cada IA (`~/.claude/skills`, `~/.codex/skills`, `~/.gemini/config/skills`)?
+7. *(Claude Code)* Pode ligar os hooks do cityPhy em `~/.claude/settings.json`? Fora dos projetos do cityPhy eles não fazem nada.
 
-Uma IA que abre um projeto com o bloco do cityPhy e ainda não está registrada pergunta **a você** no chat e depois roda
+**Nada é escrito dentro dos seus projetos.** A lista de projetos fica só no `cityphy.config.json`, e a IA descobre o projeto pela pasta aberta.
+
+Uma IA com a skill `cityphy` que abre um projeto ainda não registrado para ela pergunta **a você** no chat e depois roda
 `cityphy setup --project <p> --agent <id dela> --answers graph=sim,memory=sim,...`.
 
 ## Comandos

@@ -1,6 +1,11 @@
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { homedir } from 'node:os';
+import { dirname, join } from 'node:path';
 import { REPO_ROOT, type ProjectConfig } from '../config/loadConfig.ts';
+
+// cityPhy never writes inside a project. Each agent gets a global skill (all three read their
+// skills folder in every session) and Claude Code also gets global hooks. The project list lives
+// only in cityphy.config.json; the hook and the commands find the project from the current folder.
 
 const START = '<!-- cityphy:start -->';
 const END = '<!-- cityphy:end -->';
@@ -9,52 +14,95 @@ const CLAUDE_EVENTS = ['SessionStart', 'UserPromptSubmit', 'PostToolUse', 'Stop'
 /** `node "<cityPhy>/bin/cityphy.ts"` with forward slashes (works in every shell). */
 export const cli = () => `node "${join(REPO_ROOT, 'bin', 'cityphy.ts').replace(/\\/g, '/')}"`;
 
-/** The short block every agent reads in the project's AGENTS.md. Kept small: it is paid every session. */
-export function rulesBlock(project: ProjectConfig): string {
+/** Where each agent reads its global skills. */
+export const SKILL_FILES: Record<string, string> = {
+  claude: join(homedir(), '.claude', 'skills', 'cityphy', 'SKILL.md'),
+  codex: join(homedir(), '.codex', 'skills', 'cityphy', 'SKILL.md'),
+  antigravity: join(homedir(), '.gemini', 'config', 'skills', 'cityphy', 'SKILL.md'),
+};
+export const CLAUDE_SETTINGS = join(homedir(), '.claude', 'settings.json');
+
+/** The global skill. Only the frontmatter is loaded every session, so the description stays short. */
+export function skillContent(agent: string): string {
   const c = cli();
-  const p = `--project ${project.name}`;
   return [
-    START,
-    '## cityPhy: grafo e memória locais',
-    `- Antes de ler código: \`${c} query "<pergunta>" ${p} --agent <sua-ia>\`; leia só os arquivos que ele apontar.`,
-    `- Para lembrar trabalho anterior: \`${c} mem search "<termos>" ${p}\`.`,
-    `- Se você não tem hook do cityPhy: ao terminar algo importante, \`${c} mem save --note "<feito/decidido>" ${p} --agent <sua-ia>\`.`,
-    `- Depois de mudar código: \`${c} refresh\`. Não rode \`graphify update .\` nem \`/graphify .\` aqui: os grafos ficam fora do projeto.`,
-    `- IA nova neste projeto: pergunte à pessoa o que ligar e rode \`${c} setup ${p} --agent <sua-ia> --answers graph=sim,memory=sim,inject=sim,metrics=sim\`.`,
-    END,
+    '---',
+    'name: cityphy',
+    'description: Use em toda tarefa de código numa pasta registrada no cityPhy (grafo, memória e métrica de tokens locais). Rode `cityphy context` para saber se a pasta está registrada.',
+    '---',
+    '',
+    '# cityPhy',
+    '',
+    `1. No início: \`${c} context\`. Se responder "projeto não encontrado", ignore esta skill.`,
+    `2. Antes de ler código: \`${c} query "<nomes de classes/funções>" --agent ${agent}\`; leia só os arquivos que ele apontar.`,
+    `3. Para lembrar trabalho anterior: \`${c} mem search "<termos>"\`.`,
+    `4. Ao terminar algo importante (se você não tem hook do cityPhy): \`${c} mem save --note "<feito/decidido>" --agent ${agent}\`.`,
+    `5. Depois de mudar código: \`${c} refresh\`. Não rode \`graphify update .\` nem \`/graphify .\` dentro do projeto.`,
+    `6. Projeto novo ou IA nova: pergunte à pessoa o que ligar e rode \`${c} setup --project <nome> --agent ${agent} --answers graph=sim,memory=sim,inject=sim,metrics=sim\`.`,
+    '',
+    'O projeto é descoberto pela pasta atual; não escreva nada do cityPhy dentro do projeto.',
+    '',
   ].join('\n');
 }
 
-/** Writes or replaces the cityPhy block in AGENTS.md (everything outside the markers is kept). */
-export function writeRulesBlock(project: ProjectConfig): string {
-  const path = join(project.path, 'AGENTS.md');
-  const current = existsSync(path) ? readFileSync(path, 'utf8') : '';
-  const block = rulesBlock(project);
-  const re = new RegExp(`${START}[\\s\\S]*?${END}`);
-  const next = re.test(current) ? current.replace(re, block) : `${current.trimEnd()}${current ? '\n\n' : ''}${block}\n`;
-  writeFileSync(path, next, 'utf8');
+export function writeSkill(agent: string): string {
+  const path = SKILL_FILES[agent];
+  mkdirSync(dirname(path), { recursive: true });
+  writeFileSync(path, skillContent(agent), 'utf8');
   return path;
 }
 
-/** Claude Code hooks in the project's `.claude/settings.local.json` (personal, not committed). Idempotent. */
-export function writeClaudeHooks(project: ProjectConfig): string {
-  const dir = join(project.path, '.claude');
-  const path = join(dir, 'settings.local.json');
-  const settings = existsSync(path) ? JSON.parse(readFileSync(path, 'utf8')) : {};
-  const command = `${cli()} hook claude`;
+const isCityphyHook = (h: { command?: string }) => !!h.command && h.command.includes('cityphy.ts') && h.command.includes('hook claude');
+type HookGroup = { matcher?: string; hooks: Array<{ type: string; command: string }> };
+
+/** Claude Code hooks in ~/.claude/settings.json. Keeps every other setting. Idempotent. */
+export function writeClaudeGlobalHooks(): string {
+  const settings = existsSync(CLAUDE_SETTINGS) ? JSON.parse(readFileSync(CLAUDE_SETTINGS, 'utf8')) : {};
   settings.hooks ??= {};
   for (const event of CLAUDE_EVENTS) {
-    const list: Array<{ matcher?: string; hooks: Array<{ type: string; command: string }> }> = (settings.hooks[event] ??= []);
-    const has = list.some((g) => g.hooks?.some((h) => h.command.includes('cityphy.ts') && h.command.includes('hook claude')));
-    if (!has) list.push({ ...(event === 'PostToolUse' ? { matcher: '*' } : {}), hooks: [{ type: 'command', command }] });
+    const list: HookGroup[] = (settings.hooks[event] ??= []);
+    if (!list.some((g) => g.hooks?.some(isCityphyHook))) {
+      list.push({ ...(event === 'PostToolUse' ? { matcher: '*' } : {}), hooks: [{ type: 'command', command: `${cli()} hook claude` }] });
+    }
   }
-  mkdirSync(dir, { recursive: true });
-  writeFileSync(path, JSON.stringify(settings, null, 2), 'utf8');
+  mkdirSync(dirname(CLAUDE_SETTINGS), { recursive: true });
+  writeFileSync(CLAUDE_SETTINGS, JSON.stringify(settings, null, 2), 'utf8');
+  return CLAUDE_SETTINGS;
+}
+
+export function hasClaudeGlobalHooks(): boolean {
+  return existsSync(CLAUDE_SETTINGS) && readFileSync(CLAUDE_SETTINGS, 'utf8').includes('hook claude');
+}
+
+// --- cleanup of what older versions wrote inside projects ---
+
+/** Old versions wrote a block into the project's AGENTS.md; this removes it (and the file, if only the block was there). */
+export function removeProjectRules(project: ProjectConfig): string | null {
+  const path = join(project.path, 'AGENTS.md');
+  if (!existsSync(path)) return null;
+  const text = readFileSync(path, 'utf8');
+  const re = new RegExp(`\\n*${START}[\\s\\S]*?${END}\\n?`);
+  if (!re.test(text)) return null;
+  const next = text.replace(re, '\n').replace(/\n{3,}/g, '\n\n').trim();
+  if (next) writeFileSync(path, `${next}\n`, 'utf8');
+  else rmSync(path);
   return path;
 }
 
-/** True when the project's Claude settings already call the cityPhy hook. */
-export function hasClaudeHooks(project: ProjectConfig): boolean {
+/** Old versions put the hooks in <project>/.claude/settings.local.json; this removes them (and the file, if empty). */
+export function removeProjectClaudeHooks(project: ProjectConfig): string | null {
   const path = join(project.path, '.claude', 'settings.local.json');
-  return existsSync(path) && readFileSync(path, 'utf8').includes('hook claude') && readFileSync(path, 'utf8').includes('cityphy.ts');
+  if (!existsSync(path)) return null;
+  const settings = JSON.parse(readFileSync(path, 'utf8'));
+  if (!settings.hooks || !JSON.stringify(settings.hooks).includes('hook claude')) return null;
+  for (const event of Object.keys(settings.hooks)) {
+    settings.hooks[event] = (settings.hooks[event] as HookGroup[])
+      .map((g) => ({ ...g, hooks: g.hooks.filter((h) => !isCityphyHook(h)) }))
+      .filter((g) => g.hooks.length);
+    if (!settings.hooks[event].length) delete settings.hooks[event];
+  }
+  if (!Object.keys(settings.hooks).length) delete settings.hooks;
+  if (Object.keys(settings).length) writeFileSync(path, JSON.stringify(settings, null, 2), 'utf8');
+  else rmSync(path);
+  return path;
 }
