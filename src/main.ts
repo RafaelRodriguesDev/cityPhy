@@ -64,7 +64,9 @@ async function main() {
   stage.scene.add(buildGround(minZ, maxZ), buildStreetLamps([...posts.west, ...posts.east, ...posts.cross]));
   const lotMin = Math.min(...lots.map((l) => l.minZ));
   const lotMax = Math.max(...lots.map((l) => l.maxZ));
-  stage.frame(new Vector3(STREET_X, 6, (lotMin + lotMax) / 2), lotMax - lotMin);
+  const lotWest = Math.min(STREET_X, ...lots.map((l) => l.minX));
+  const lotEast = Math.max(STREET_X, ...lots.map((l) => l.maxX));
+  stage.frame(new Vector3((lotWest + lotEast) / 2, 6, (lotMin + lotMax) / 2), Math.max(lotMax - lotMin, (lotEast - lotWest) * 0.8));
 
   const items: Item[] = [];
   const meshes: InstancedMesh[] = [];

@@ -1,3 +1,4 @@
+import { antigravityConsumption } from './antigravityConsumption.ts';
 import { claudeConsumption } from './claudeConsumption.ts';
 import { codexConsumption } from './codexConsumption.ts';
 import type { ToolConsumption } from './types.ts';
@@ -9,4 +10,5 @@ import type { ToolConsumption } from './types.ts';
 export const CONSUMPTION_READERS: Record<string, (limits: ToolConsumption['limits']) => Promise<ToolConsumption>> = {
   claude: claudeConsumption,
   codex: codexConsumption,
+  antigravity: antigravityConsumption,
 };
