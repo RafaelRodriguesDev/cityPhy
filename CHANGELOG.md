@@ -1,0 +1,28 @@
+# Changelog
+
+All notable changes to cityPhy. Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
+
+## [Unreleased]
+
+### Added
+- **Local memory per project** (idea of claude-mem, kept on disk): Claude Code hooks turn session events into
+  observations in a per-project SQLite file (`node:sqlite`, full-text search), summarized by rules into `LESSONS.md`
+  and brought back at session start within a token budget. `cityphy mem search | save | stats | lessons`.
+- **Import of past Claude sessions and memories** into the project memory: `cityphy mem import claude`.
+- **Savings metric**: `cityphy query` runs a graphify query and logs tokens returned vs tokens of the whole source
+  files behind the answer (`metrics.jsonl`). Real usage per model read from Claude Code session logs.
+- **`cityphy setup`**: checks requirements (Node 24+, Python 3.10+, graphify, uv/pipx, optional Ollama), installs only
+  with permission, asks the opt-in questions per project and writes the agent rules (AGENTS.md block, Claude hooks) only
+  with permission.
+- **Condominium panel with tabs**: summary, savings, memory and enabled options.
+- **Agent towers** in graphify's `graph.json` format, generated from each agent's local folders (names, sizes, dates and
+  links only): Claude and Antigravity, plus a prompt for any other agent to build its own (`docs/PROMPT-TORRE.md`).
+- **The city**: streets, sidewalks, street lamps, fenced condominiums with gatehouses, one color per project, power
+  lines that run on the lamp posts and cross the street through the air, light pulses, hover and click panels.
+- **Generic configuration** (`cityphy.config.json`, optional `graphifyBin`), `npm run refresh`, fictional example city
+  (`npm run dev:example`), tests for the city rules, README in Portuguese and English, credits.
+
+### Fixed
+- File events are recorded in the project that holds the file, not in the folder where the session runs.
+- Agent databases are opened read-only.
+- First animation frame could step backwards and produce NaN positions.

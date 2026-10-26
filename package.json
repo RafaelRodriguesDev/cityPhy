@@ -1,0 +1,28 @@
+{
+  "name": "cityphy",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Watch your AI agents think, as a city: a 3D view of graphify knowledge graphs and agent context.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "dev:example": "vite --mode example",
+    "example": "node scripts/makeExample.ts",
+    "cityphy": "node bin/cityphy.ts",
+    "build": "vite build",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "refresh": "node scripts/refresh.ts"
+  },
+  "dependencies": {
+    "three": "0.170.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.10.2",
+    "@types/three": "0.170.0",
+    "typescript": "5.7.2",
+    "vite": "6.0.7",
+    "vitest": "2.1.8"
+  }
+}

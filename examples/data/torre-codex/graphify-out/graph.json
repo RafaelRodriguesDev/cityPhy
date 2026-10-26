@@ -1,0 +1,472 @@
+{
+  "directed": true,
+  "multigraph": false,
+  "graph": {
+    "schema_version": 1,
+    "cityphy": {
+      "kind": "agent-tower",
+      "schemaVersion": 1,
+      "agent": "codex",
+      "agentName": "Codex",
+      "generatedAt": "2026-10-26T12:54:00.577Z",
+      "recentSessions": 8
+    }
+  },
+  "nodes": [
+    {
+      "id": "codex.ground.built-in",
+      "label": "Regras do app e ferramentas",
+      "community": 0,
+      "community_name": "Térreo (sempre carregado)",
+      "file_type": "document",
+      "source_file": "(exemplo) Regras do app e ferramentas",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "ground",
+        "load": "always",
+        "bytes": null,
+        "tokensApprox": null,
+        "updatedAt": "2026-10-21T09:00:00.000Z",
+        "project": null,
+        "annex": false
+      }
+    },
+    {
+      "id": "codex.ground.global",
+      "label": "config.toml",
+      "community": 0,
+      "community_name": "Térreo (sempre carregado)",
+      "file_type": "document",
+      "source_file": "(exemplo) config.toml",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "ground",
+        "load": "always",
+        "bytes": 1537,
+        "tokensApprox": 384,
+        "updatedAt": "2026-10-21T09:00:00.000Z",
+        "project": null,
+        "annex": false
+      }
+    },
+    {
+      "id": "codex.ground.web-store.agents-md",
+      "label": "AGENTS.md · web-store",
+      "community": 0,
+      "community_name": "Térreo (sempre carregado)",
+      "file_type": "document",
+      "source_file": "(exemplo) AGENTS.md · web-store",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "ground",
+        "load": "always",
+        "bytes": 5332,
+        "tokensApprox": 1333,
+        "updatedAt": "2026-10-21T09:00:00.000Z",
+        "project": "/home/dev/web-store",
+        "annex": false
+      }
+    },
+    {
+      "id": "codex.ground.web-store.skills-list",
+      "label": "Lista de skills · web-store",
+      "community": 0,
+      "community_name": "Térreo (sempre carregado)",
+      "file_type": "document",
+      "source_file": "(exemplo) Lista de skills · web-store",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "ground",
+        "load": "always",
+        "bytes": 2602,
+        "tokensApprox": 651,
+        "updatedAt": "2026-10-21T09:00:00.000Z",
+        "project": "/home/dev/web-store",
+        "annex": false
+      }
+    },
+    {
+      "id": "codex.ground.mobile-app.agents-md",
+      "label": "AGENTS.md · mobile-app",
+      "community": 0,
+      "community_name": "Térreo (sempre carregado)",
+      "file_type": "document",
+      "source_file": "(exemplo) AGENTS.md · mobile-app",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "ground",
+        "load": "always",
+        "bytes": 6225,
+        "tokensApprox": 1556,
+        "updatedAt": "2026-10-21T09:00:00.000Z",
+        "project": "/home/dev/mobile-app",
+        "annex": false
+      }
+    },
+    {
+      "id": "codex.ground.mobile-app.skills-list",
+      "label": "Lista de skills · mobile-app",
+      "community": 0,
+      "community_name": "Térreo (sempre carregado)",
+      "file_type": "document",
+      "source_file": "(exemplo) Lista de skills · mobile-app",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "ground",
+        "load": "always",
+        "bytes": 2923,
+        "tokensApprox": 731,
+        "updatedAt": "2026-10-21T09:00:00.000Z",
+        "project": "/home/dev/mobile-app",
+        "annex": false
+      }
+    },
+    {
+      "id": "codex.ground.memory-index",
+      "label": "Índice da memória",
+      "community": 0,
+      "community_name": "Térreo (sempre carregado)",
+      "file_type": "document",
+      "source_file": "(exemplo) Índice da memória",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "ground",
+        "load": "always",
+        "bytes": 1657,
+        "tokensApprox": 414,
+        "updatedAt": "2026-10-21T09:00:00.000Z",
+        "project": "/home/dev/web-store",
+        "annex": false
+      }
+    },
+    {
+      "id": "codex.skills.lint-fix",
+      "label": "lint-fix",
+      "community": 2,
+      "community_name": "Skills",
+      "file_type": "document",
+      "source_file": "(exemplo) lint-fix/SKILL.md",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "skills",
+        "load": "on-demand",
+        "bytes": 1889,
+        "tokensApprox": 472,
+        "updatedAt": "2026-10-11T09:00:00.000Z",
+        "project": null,
+        "annex": false
+      }
+    },
+    {
+      "id": "codex.skills.bundle-size",
+      "label": "bundle-size",
+      "community": 2,
+      "community_name": "Skills",
+      "file_type": "document",
+      "source_file": "(exemplo) bundle-size/SKILL.md",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "skills",
+        "load": "on-demand",
+        "bytes": 5656,
+        "tokensApprox": 1414,
+        "updatedAt": "2026-10-11T09:00:00.000Z",
+        "project": null,
+        "annex": false
+      }
+    },
+    {
+      "id": "codex.skills.storybook",
+      "label": "storybook",
+      "community": 2,
+      "community_name": "Skills",
+      "file_type": "document",
+      "source_file": "(exemplo) storybook/SKILL.md",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "skills",
+        "load": "on-demand",
+        "bytes": 9393,
+        "tokensApprox": 2348,
+        "updatedAt": "2026-10-11T09:00:00.000Z",
+        "project": null,
+        "annex": false
+      }
+    },
+    {
+      "id": "codex.memory.m0",
+      "label": "padrões do monorepo",
+      "community": 1,
+      "community_name": "Memória",
+      "file_type": "document",
+      "source_file": "(exemplo) memory/0.md",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "memory",
+        "load": "on-demand",
+        "bytes": 2743,
+        "tokensApprox": 686,
+        "updatedAt": "2026-10-16T09:00:00.000Z",
+        "project": "/home/dev/web-store",
+        "annex": false
+      }
+    },
+    {
+      "id": "codex.memory.m1",
+      "label": "build do app",
+      "community": 1,
+      "community_name": "Memória",
+      "file_type": "document",
+      "source_file": "(exemplo) memory/1.md",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "memory",
+        "load": "on-demand",
+        "bytes": 941,
+        "tokensApprox": 235,
+        "updatedAt": "2026-10-17T09:00:00.000Z",
+        "project": "/home/dev/web-store",
+        "annex": false
+      }
+    },
+    {
+      "id": "codex.sessions.s0",
+      "label": "checkout · web-store",
+      "community": 3,
+      "community_name": "Sessões",
+      "file_type": "document",
+      "source_file": "(exemplo) sessão",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "sessions",
+        "load": "history",
+        "bytes": 9294129,
+        "tokensApprox": 2323532,
+        "updatedAt": "2026-10-01T09:00:00.000Z",
+        "project": "/home/dev/web-store",
+        "annex": true
+      }
+    },
+    {
+      "id": "codex.sessions.s1",
+      "label": "login social · mobile-app",
+      "community": 3,
+      "community_name": "Sessões",
+      "file_type": "document",
+      "source_file": "(exemplo) sessão",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "sessions",
+        "load": "history",
+        "bytes": 5240885,
+        "tokensApprox": 1310221,
+        "updatedAt": "2026-10-02T09:00:00.000Z",
+        "project": "/home/dev/mobile-app",
+        "annex": true
+      }
+    },
+    {
+      "id": "codex.sessions.s2",
+      "label": "relatório de vendas · web-store",
+      "community": 3,
+      "community_name": "Sessões",
+      "file_type": "document",
+      "source_file": "(exemplo) sessão",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "sessions",
+        "load": "history",
+        "bytes": 2360582,
+        "tokensApprox": 590146,
+        "updatedAt": "2026-10-03T09:00:00.000Z",
+        "project": "/home/dev/web-store",
+        "annex": false
+      }
+    },
+    {
+      "id": "codex.sessions.s3",
+      "label": "cache de produtos · mobile-app",
+      "community": 3,
+      "community_name": "Sessões",
+      "file_type": "document",
+      "source_file": "(exemplo) sessão",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "sessions",
+        "load": "history",
+        "bytes": 13102354,
+        "tokensApprox": 3275589,
+        "updatedAt": "2026-10-04T09:00:00.000Z",
+        "project": "/home/dev/mobile-app",
+        "annex": false
+      }
+    },
+    {
+      "id": "codex.sessions.s4",
+      "label": "tela de perfil · web-store",
+      "community": 3,
+      "community_name": "Sessões",
+      "file_type": "document",
+      "source_file": "(exemplo) sessão",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "sessions",
+        "load": "history",
+        "bytes": 10078369,
+        "tokensApprox": 2519592,
+        "updatedAt": "2026-10-05T09:00:00.000Z",
+        "project": "/home/dev/web-store",
+        "annex": false
+      }
+    },
+    {
+      "id": "codex.sessions.s5",
+      "label": "migração do banco · mobile-app",
+      "community": 3,
+      "community_name": "Sessões",
+      "file_type": "document",
+      "source_file": "(exemplo) sessão",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "sessions",
+        "load": "history",
+        "bytes": 5958219,
+        "tokensApprox": 1489555,
+        "updatedAt": "2026-10-06T09:00:00.000Z",
+        "project": "/home/dev/mobile-app",
+        "annex": false
+      }
+    },
+    {
+      "id": "codex.sessions.s6",
+      "label": "testes de carga · web-store",
+      "community": 3,
+      "community_name": "Sessões",
+      "file_type": "document",
+      "source_file": "(exemplo) sessão",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "sessions",
+        "load": "history",
+        "bytes": 18590346,
+        "tokensApprox": 4647587,
+        "updatedAt": "2026-10-07T09:00:00.000Z",
+        "project": "/home/dev/web-store",
+        "annex": false
+      }
+    },
+    {
+      "id": "codex.sessions.s7",
+      "label": "deploy · mobile-app",
+      "community": 3,
+      "community_name": "Sessões",
+      "file_type": "document",
+      "source_file": "(exemplo) sessão",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "sessions",
+        "load": "history",
+        "bytes": 6746648,
+        "tokensApprox": 1686662,
+        "updatedAt": "2026-10-08T09:00:00.000Z",
+        "project": "/home/dev/mobile-app",
+        "annex": false
+      }
+    },
+    {
+      "id": "codex.sessions.s8",
+      "label": "checkout · web-store",
+      "community": 3,
+      "community_name": "Sessões",
+      "file_type": "document",
+      "source_file": "(exemplo) sessão",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "sessions",
+        "load": "history",
+        "bytes": 9729193,
+        "tokensApprox": 2432298,
+        "updatedAt": "2026-10-09T09:00:00.000Z",
+        "project": "/home/dev/web-store",
+        "annex": false
+      }
+    },
+    {
+      "id": "codex.sessions.s9",
+      "label": "login social · mobile-app",
+      "community": 3,
+      "community_name": "Sessões",
+      "file_type": "document",
+      "source_file": "(exemplo) sessão",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "sessions",
+        "load": "history",
+        "bytes": 17363369,
+        "tokensApprox": 4340842,
+        "updatedAt": "2026-10-10T09:00:00.000Z",
+        "project": "/home/dev/mobile-app",
+        "annex": false
+      }
+    }
+  ],
+  "links": [
+    {
+      "source": "codex.ground.web-store.skills-list",
+      "target": "codex.skills.lint-fix",
+      "relation": "lists",
+      "confidence": "EXTRACTED",
+      "weight": 1
+    },
+    {
+      "source": "codex.ground.mobile-app.skills-list",
+      "target": "codex.skills.lint-fix",
+      "relation": "lists",
+      "confidence": "EXTRACTED",
+      "weight": 1
+    },
+    {
+      "source": "codex.ground.web-store.skills-list",
+      "target": "codex.skills.bundle-size",
+      "relation": "lists",
+      "confidence": "EXTRACTED",
+      "weight": 1
+    },
+    {
+      "source": "codex.ground.mobile-app.skills-list",
+      "target": "codex.skills.bundle-size",
+      "relation": "lists",
+      "confidence": "EXTRACTED",
+      "weight": 1
+    },
+    {
+      "source": "codex.ground.web-store.skills-list",
+      "target": "codex.skills.storybook",
+      "relation": "lists",
+      "confidence": "EXTRACTED",
+      "weight": 1
+    },
+    {
+      "source": "codex.ground.mobile-app.skills-list",
+      "target": "codex.skills.storybook",
+      "relation": "lists",
+      "confidence": "EXTRACTED",
+      "weight": 1
+    },
+    {
+      "source": "codex.ground.memory-index",
+      "target": "codex.memory.m0",
+      "relation": "indexes",
+      "confidence": "EXTRACTED",
+      "weight": 1
+    },
+    {
+      "source": "codex.ground.memory-index",
+      "target": "codex.memory.m1",
+      "relation": "indexes",
+      "confidence": "EXTRACTED",
+      "weight": 1
+    }
+  ],
+  "hyperedges": []
+}

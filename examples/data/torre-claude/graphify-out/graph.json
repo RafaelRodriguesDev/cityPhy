@@ -1,0 +1,697 @@
+{
+  "directed": true,
+  "multigraph": false,
+  "graph": {
+    "schema_version": 1,
+    "cityphy": {
+      "kind": "agent-tower",
+      "schemaVersion": 1,
+      "agent": "claude",
+      "agentName": "Claude",
+      "generatedAt": "2026-10-26T12:54:00.573Z",
+      "recentSessions": 8
+    }
+  },
+  "nodes": [
+    {
+      "id": "claude.ground.built-in",
+      "label": "Regras do app e ferramentas",
+      "community": 0,
+      "community_name": "Térreo (sempre carregado)",
+      "file_type": "document",
+      "source_file": "(exemplo) Regras do app e ferramentas",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "ground",
+        "load": "always",
+        "bytes": null,
+        "tokensApprox": null,
+        "updatedAt": "2026-10-21T09:00:00.000Z",
+        "project": null,
+        "annex": false
+      }
+    },
+    {
+      "id": "claude.ground.global",
+      "label": "CLAUDE.md global",
+      "community": 0,
+      "community_name": "Térreo (sempre carregado)",
+      "file_type": "document",
+      "source_file": "(exemplo) CLAUDE.md global",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "ground",
+        "load": "always",
+        "bytes": 837,
+        "tokensApprox": 209,
+        "updatedAt": "2026-10-21T09:00:00.000Z",
+        "project": null,
+        "annex": false
+      }
+    },
+    {
+      "id": "claude.ground.shop-api.agents-md",
+      "label": "AGENTS.md · shop-api",
+      "community": 0,
+      "community_name": "Térreo (sempre carregado)",
+      "file_type": "document",
+      "source_file": "(exemplo) AGENTS.md · shop-api",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "ground",
+        "load": "always",
+        "bytes": 6507,
+        "tokensApprox": 1627,
+        "updatedAt": "2026-10-21T09:00:00.000Z",
+        "project": "/home/dev/shop-api",
+        "annex": false
+      }
+    },
+    {
+      "id": "claude.ground.shop-api.skills-list",
+      "label": "Lista de skills · shop-api",
+      "community": 0,
+      "community_name": "Térreo (sempre carregado)",
+      "file_type": "document",
+      "source_file": "(exemplo) Lista de skills · shop-api",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "ground",
+        "load": "always",
+        "bytes": 3704,
+        "tokensApprox": 926,
+        "updatedAt": "2026-10-21T09:00:00.000Z",
+        "project": "/home/dev/shop-api",
+        "annex": false
+      }
+    },
+    {
+      "id": "claude.ground.web-store.agents-md",
+      "label": "AGENTS.md · web-store",
+      "community": 0,
+      "community_name": "Térreo (sempre carregado)",
+      "file_type": "document",
+      "source_file": "(exemplo) AGENTS.md · web-store",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "ground",
+        "load": "always",
+        "bytes": 3749,
+        "tokensApprox": 937,
+        "updatedAt": "2026-10-21T09:00:00.000Z",
+        "project": "/home/dev/web-store",
+        "annex": false
+      }
+    },
+    {
+      "id": "claude.ground.web-store.skills-list",
+      "label": "Lista de skills · web-store",
+      "community": 0,
+      "community_name": "Térreo (sempre carregado)",
+      "file_type": "document",
+      "source_file": "(exemplo) Lista de skills · web-store",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "ground",
+        "load": "always",
+        "bytes": 3688,
+        "tokensApprox": 922,
+        "updatedAt": "2026-10-21T09:00:00.000Z",
+        "project": "/home/dev/web-store",
+        "annex": false
+      }
+    },
+    {
+      "id": "claude.ground.memory-index",
+      "label": "Índice da memória",
+      "community": 0,
+      "community_name": "Térreo (sempre carregado)",
+      "file_type": "document",
+      "source_file": "(exemplo) Índice da memória",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "ground",
+        "load": "always",
+        "bytes": 1985,
+        "tokensApprox": 496,
+        "updatedAt": "2026-10-21T09:00:00.000Z",
+        "project": "/home/dev/shop-api",
+        "annex": false
+      }
+    },
+    {
+      "id": "claude.skills.run-tests",
+      "label": "run-tests",
+      "community": 2,
+      "community_name": "Skills",
+      "file_type": "document",
+      "source_file": "(exemplo) run-tests/SKILL.md",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "skills",
+        "load": "on-demand",
+        "bytes": 2341,
+        "tokensApprox": 585,
+        "updatedAt": "2026-10-11T09:00:00.000Z",
+        "project": null,
+        "annex": false
+      }
+    },
+    {
+      "id": "claude.skills.release-notes",
+      "label": "release-notes",
+      "community": 2,
+      "community_name": "Skills",
+      "file_type": "document",
+      "source_file": "(exemplo) release-notes/SKILL.md",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "skills",
+        "load": "on-demand",
+        "bytes": 3853,
+        "tokensApprox": 963,
+        "updatedAt": "2026-10-11T09:00:00.000Z",
+        "project": null,
+        "annex": false
+      }
+    },
+    {
+      "id": "claude.skills.db-migrations",
+      "label": "db-migrations",
+      "community": 2,
+      "community_name": "Skills",
+      "file_type": "document",
+      "source_file": "(exemplo) db-migrations/SKILL.md",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "skills",
+        "load": "on-demand",
+        "bytes": 3940,
+        "tokensApprox": 985,
+        "updatedAt": "2026-10-11T09:00:00.000Z",
+        "project": null,
+        "annex": false
+      }
+    },
+    {
+      "id": "claude.skills.ui-review",
+      "label": "ui-review",
+      "community": 2,
+      "community_name": "Skills",
+      "file_type": "document",
+      "source_file": "(exemplo) ui-review/SKILL.md",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "skills",
+        "load": "on-demand",
+        "bytes": 2119,
+        "tokensApprox": 530,
+        "updatedAt": "2026-10-11T09:00:00.000Z",
+        "project": null,
+        "annex": false
+      }
+    },
+    {
+      "id": "claude.memory.m0",
+      "label": "preferências de commit",
+      "community": 1,
+      "community_name": "Memória",
+      "file_type": "document",
+      "source_file": "(exemplo) memory/0.md",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "memory",
+        "load": "on-demand",
+        "bytes": 3184,
+        "tokensApprox": 796,
+        "updatedAt": "2026-10-16T09:00:00.000Z",
+        "project": "/home/dev/shop-api",
+        "annex": false
+      }
+    },
+    {
+      "id": "claude.memory.m1",
+      "label": "ambiente local",
+      "community": 1,
+      "community_name": "Memória",
+      "file_type": "document",
+      "source_file": "(exemplo) memory/1.md",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "memory",
+        "load": "on-demand",
+        "bytes": 2463,
+        "tokensApprox": 616,
+        "updatedAt": "2026-10-17T09:00:00.000Z",
+        "project": "/home/dev/shop-api",
+        "annex": false
+      }
+    },
+    {
+      "id": "claude.memory.m2",
+      "label": "regras de layout",
+      "community": 1,
+      "community_name": "Memória",
+      "file_type": "document",
+      "source_file": "(exemplo) memory/2.md",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "memory",
+        "load": "on-demand",
+        "bytes": 3185,
+        "tokensApprox": 796,
+        "updatedAt": "2026-10-18T09:00:00.000Z",
+        "project": "/home/dev/shop-api",
+        "annex": false
+      }
+    },
+    {
+      "id": "claude.memory.m3",
+      "label": "onde paramos: checkout",
+      "community": 1,
+      "community_name": "Memória",
+      "file_type": "document",
+      "source_file": "(exemplo) memory/3.md",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "memory",
+        "load": "on-demand",
+        "bytes": 1137,
+        "tokensApprox": 284,
+        "updatedAt": "2026-10-19T09:00:00.000Z",
+        "project": "/home/dev/shop-api",
+        "annex": false
+      }
+    },
+    {
+      "id": "claude.memory.m4",
+      "label": "decisões de API",
+      "community": 1,
+      "community_name": "Memória",
+      "file_type": "document",
+      "source_file": "(exemplo) memory/4.md",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "memory",
+        "load": "on-demand",
+        "bytes": 2339,
+        "tokensApprox": 585,
+        "updatedAt": "2026-10-20T09:00:00.000Z",
+        "project": "/home/dev/shop-api",
+        "annex": false
+      }
+    },
+    {
+      "id": "claude.memory.m5",
+      "label": "testes lentos",
+      "community": 1,
+      "community_name": "Memória",
+      "file_type": "document",
+      "source_file": "(exemplo) memory/5.md",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "memory",
+        "load": "on-demand",
+        "bytes": 1546,
+        "tokensApprox": 387,
+        "updatedAt": "2026-10-21T09:00:00.000Z",
+        "project": "/home/dev/shop-api",
+        "annex": false
+      }
+    },
+    {
+      "id": "claude.sessions.s0",
+      "label": "checkout · shop-api",
+      "community": 3,
+      "community_name": "Sessões",
+      "file_type": "document",
+      "source_file": "(exemplo) sessão",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "sessions",
+        "load": "history",
+        "bytes": 2202080,
+        "tokensApprox": 550520,
+        "updatedAt": "2026-10-01T09:00:00.000Z",
+        "project": "/home/dev/shop-api",
+        "annex": true
+      }
+    },
+    {
+      "id": "claude.sessions.s1",
+      "label": "login social · web-store",
+      "community": 3,
+      "community_name": "Sessões",
+      "file_type": "document",
+      "source_file": "(exemplo) sessão",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "sessions",
+        "load": "history",
+        "bytes": 9168890,
+        "tokensApprox": 2292223,
+        "updatedAt": "2026-10-02T09:00:00.000Z",
+        "project": "/home/dev/web-store",
+        "annex": true
+      }
+    },
+    {
+      "id": "claude.sessions.s2",
+      "label": "relatório de vendas · shop-api",
+      "community": 3,
+      "community_name": "Sessões",
+      "file_type": "document",
+      "source_file": "(exemplo) sessão",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "sessions",
+        "load": "history",
+        "bytes": 349673,
+        "tokensApprox": 87418,
+        "updatedAt": "2026-10-03T09:00:00.000Z",
+        "project": "/home/dev/shop-api",
+        "annex": true
+      }
+    },
+    {
+      "id": "claude.sessions.s3",
+      "label": "cache de produtos · web-store",
+      "community": 3,
+      "community_name": "Sessões",
+      "file_type": "document",
+      "source_file": "(exemplo) sessão",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "sessions",
+        "load": "history",
+        "bytes": 15761625,
+        "tokensApprox": 3940406,
+        "updatedAt": "2026-10-04T09:00:00.000Z",
+        "project": "/home/dev/web-store",
+        "annex": true
+      }
+    },
+    {
+      "id": "claude.sessions.s4",
+      "label": "tela de perfil · shop-api",
+      "community": 3,
+      "community_name": "Sessões",
+      "file_type": "document",
+      "source_file": "(exemplo) sessão",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "sessions",
+        "load": "history",
+        "bytes": 4433345,
+        "tokensApprox": 1108336,
+        "updatedAt": "2026-10-05T09:00:00.000Z",
+        "project": "/home/dev/shop-api",
+        "annex": true
+      }
+    },
+    {
+      "id": "claude.sessions.s5",
+      "label": "migração do banco · web-store",
+      "community": 3,
+      "community_name": "Sessões",
+      "file_type": "document",
+      "source_file": "(exemplo) sessão",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "sessions",
+        "load": "history",
+        "bytes": 10034739,
+        "tokensApprox": 2508685,
+        "updatedAt": "2026-10-06T09:00:00.000Z",
+        "project": "/home/dev/web-store",
+        "annex": true
+      }
+    },
+    {
+      "id": "claude.sessions.s6",
+      "label": "testes de carga · shop-api",
+      "community": 3,
+      "community_name": "Sessões",
+      "file_type": "document",
+      "source_file": "(exemplo) sessão",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "sessions",
+        "load": "history",
+        "bytes": 12675003,
+        "tokensApprox": 3168751,
+        "updatedAt": "2026-10-07T09:00:00.000Z",
+        "project": "/home/dev/shop-api",
+        "annex": false
+      }
+    },
+    {
+      "id": "claude.sessions.s7",
+      "label": "deploy · web-store",
+      "community": 3,
+      "community_name": "Sessões",
+      "file_type": "document",
+      "source_file": "(exemplo) sessão",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "sessions",
+        "load": "history",
+        "bytes": 7591083,
+        "tokensApprox": 1897771,
+        "updatedAt": "2026-10-08T09:00:00.000Z",
+        "project": "/home/dev/web-store",
+        "annex": false
+      }
+    },
+    {
+      "id": "claude.sessions.s8",
+      "label": "checkout · shop-api",
+      "community": 3,
+      "community_name": "Sessões",
+      "file_type": "document",
+      "source_file": "(exemplo) sessão",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "sessions",
+        "load": "history",
+        "bytes": 2137333,
+        "tokensApprox": 534333,
+        "updatedAt": "2026-10-09T09:00:00.000Z",
+        "project": "/home/dev/shop-api",
+        "annex": false
+      }
+    },
+    {
+      "id": "claude.sessions.s9",
+      "label": "login social · web-store",
+      "community": 3,
+      "community_name": "Sessões",
+      "file_type": "document",
+      "source_file": "(exemplo) sessão",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "sessions",
+        "load": "history",
+        "bytes": 960768,
+        "tokensApprox": 240192,
+        "updatedAt": "2026-10-10T09:00:00.000Z",
+        "project": "/home/dev/web-store",
+        "annex": false
+      }
+    },
+    {
+      "id": "claude.sessions.s10",
+      "label": "relatório de vendas · shop-api",
+      "community": 3,
+      "community_name": "Sessões",
+      "file_type": "document",
+      "source_file": "(exemplo) sessão",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "sessions",
+        "load": "history",
+        "bytes": 6442652,
+        "tokensApprox": 1610663,
+        "updatedAt": "2026-10-11T09:00:00.000Z",
+        "project": "/home/dev/shop-api",
+        "annex": false
+      }
+    },
+    {
+      "id": "claude.sessions.s11",
+      "label": "cache de produtos · web-store",
+      "community": 3,
+      "community_name": "Sessões",
+      "file_type": "document",
+      "source_file": "(exemplo) sessão",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "sessions",
+        "load": "history",
+        "bytes": 463403,
+        "tokensApprox": 115851,
+        "updatedAt": "2026-10-12T09:00:00.000Z",
+        "project": "/home/dev/web-store",
+        "annex": false
+      }
+    },
+    {
+      "id": "claude.sessions.s12",
+      "label": "tela de perfil · shop-api",
+      "community": 3,
+      "community_name": "Sessões",
+      "file_type": "document",
+      "source_file": "(exemplo) sessão",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "sessions",
+        "load": "history",
+        "bytes": 7220207,
+        "tokensApprox": 1805052,
+        "updatedAt": "2026-10-13T09:00:00.000Z",
+        "project": "/home/dev/shop-api",
+        "annex": false
+      }
+    },
+    {
+      "id": "claude.sessions.s13",
+      "label": "migração do banco · web-store",
+      "community": 3,
+      "community_name": "Sessões",
+      "file_type": "document",
+      "source_file": "(exemplo) sessão",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "sessions",
+        "load": "history",
+        "bytes": 8829449,
+        "tokensApprox": 2207362,
+        "updatedAt": "2026-10-14T09:00:00.000Z",
+        "project": "/home/dev/web-store",
+        "annex": false
+      }
+    }
+  ],
+  "links": [
+    {
+      "source": "claude.ground.shop-api.skills-list",
+      "target": "claude.skills.run-tests",
+      "relation": "lists",
+      "confidence": "EXTRACTED",
+      "weight": 1
+    },
+    {
+      "source": "claude.ground.web-store.skills-list",
+      "target": "claude.skills.run-tests",
+      "relation": "lists",
+      "confidence": "EXTRACTED",
+      "weight": 1
+    },
+    {
+      "source": "claude.ground.shop-api.skills-list",
+      "target": "claude.skills.release-notes",
+      "relation": "lists",
+      "confidence": "EXTRACTED",
+      "weight": 1
+    },
+    {
+      "source": "claude.ground.web-store.skills-list",
+      "target": "claude.skills.release-notes",
+      "relation": "lists",
+      "confidence": "EXTRACTED",
+      "weight": 1
+    },
+    {
+      "source": "claude.ground.shop-api.skills-list",
+      "target": "claude.skills.db-migrations",
+      "relation": "lists",
+      "confidence": "EXTRACTED",
+      "weight": 1
+    },
+    {
+      "source": "claude.ground.web-store.skills-list",
+      "target": "claude.skills.db-migrations",
+      "relation": "lists",
+      "confidence": "EXTRACTED",
+      "weight": 1
+    },
+    {
+      "source": "claude.ground.shop-api.skills-list",
+      "target": "claude.skills.ui-review",
+      "relation": "lists",
+      "confidence": "EXTRACTED",
+      "weight": 1
+    },
+    {
+      "source": "claude.ground.web-store.skills-list",
+      "target": "claude.skills.ui-review",
+      "relation": "lists",
+      "confidence": "EXTRACTED",
+      "weight": 1
+    },
+    {
+      "source": "claude.ground.memory-index",
+      "target": "claude.memory.m0",
+      "relation": "indexes",
+      "confidence": "EXTRACTED",
+      "weight": 1
+    },
+    {
+      "source": "claude.ground.memory-index",
+      "target": "claude.memory.m1",
+      "relation": "indexes",
+      "confidence": "EXTRACTED",
+      "weight": 1
+    },
+    {
+      "source": "claude.ground.memory-index",
+      "target": "claude.memory.m2",
+      "relation": "indexes",
+      "confidence": "EXTRACTED",
+      "weight": 1
+    },
+    {
+      "source": "claude.ground.memory-index",
+      "target": "claude.memory.m3",
+      "relation": "indexes",
+      "confidence": "EXTRACTED",
+      "weight": 1
+    },
+    {
+      "source": "claude.memory.m3",
+      "target": "claude.memory.m2",
+      "relation": "links_to",
+      "confidence": "EXTRACTED",
+      "weight": 1
+    },
+    {
+      "source": "claude.ground.memory-index",
+      "target": "claude.memory.m4",
+      "relation": "indexes",
+      "confidence": "EXTRACTED",
+      "weight": 1
+    },
+    {
+      "source": "claude.memory.m4",
+      "target": "claude.memory.m3",
+      "relation": "links_to",
+      "confidence": "EXTRACTED",
+      "weight": 1
+    },
+    {
+      "source": "claude.ground.memory-index",
+      "target": "claude.memory.m5",
+      "relation": "indexes",
+      "confidence": "EXTRACTED",
+      "weight": 1
+    },
+    {
+      "source": "claude.memory.m5",
+      "target": "claude.memory.m4",
+      "relation": "links_to",
+      "confidence": "EXTRACTED",
+      "weight": 1
+    }
+  ],
+  "hyperedges": []
+}

@@ -1,0 +1,468 @@
+{
+  "directed": true,
+  "multigraph": false,
+  "graph": {
+    "schema_version": 1,
+    "cityphy": {
+      "kind": "agent-tower",
+      "schemaVersion": 1,
+      "agent": "antigravity",
+      "agentName": "Antigravity",
+      "generatedAt": "2026-10-26T12:54:00.581Z",
+      "recentSessions": 8
+    }
+  },
+  "nodes": [
+    {
+      "id": "antigravity.ground.built-in",
+      "label": "Regras do app e ferramentas",
+      "community": 0,
+      "community_name": "Térreo (sempre carregado)",
+      "file_type": "document",
+      "source_file": "(exemplo) Regras do app e ferramentas",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "ground",
+        "load": "always",
+        "bytes": null,
+        "tokensApprox": null,
+        "updatedAt": "2026-10-21T09:00:00.000Z",
+        "project": null,
+        "annex": false
+      }
+    },
+    {
+      "id": "antigravity.ground.global",
+      "label": "GEMINI.md global",
+      "community": 0,
+      "community_name": "Térreo (sempre carregado)",
+      "file_type": "document",
+      "source_file": "(exemplo) GEMINI.md global",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "ground",
+        "load": "always",
+        "bytes": 756,
+        "tokensApprox": 189,
+        "updatedAt": "2026-10-21T09:00:00.000Z",
+        "project": null,
+        "annex": false
+      }
+    },
+    {
+      "id": "antigravity.ground.shop-api.agents-md",
+      "label": "AGENTS.md · shop-api",
+      "community": 0,
+      "community_name": "Térreo (sempre carregado)",
+      "file_type": "document",
+      "source_file": "(exemplo) AGENTS.md · shop-api",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "ground",
+        "load": "always",
+        "bytes": 3687,
+        "tokensApprox": 922,
+        "updatedAt": "2026-10-21T09:00:00.000Z",
+        "project": "/home/dev/shop-api",
+        "annex": false
+      }
+    },
+    {
+      "id": "antigravity.ground.shop-api.skills-list",
+      "label": "Lista de skills · shop-api",
+      "community": 0,
+      "community_name": "Térreo (sempre carregado)",
+      "file_type": "document",
+      "source_file": "(exemplo) Lista de skills · shop-api",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "ground",
+        "load": "always",
+        "bytes": 1565,
+        "tokensApprox": 391,
+        "updatedAt": "2026-10-21T09:00:00.000Z",
+        "project": "/home/dev/shop-api",
+        "annex": false
+      }
+    },
+    {
+      "id": "antigravity.ground.memory-index",
+      "label": "Índice da memória",
+      "community": 0,
+      "community_name": "Térreo (sempre carregado)",
+      "file_type": "document",
+      "source_file": "(exemplo) Índice da memória",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "ground",
+        "load": "always",
+        "bytes": 1970,
+        "tokensApprox": 493,
+        "updatedAt": "2026-10-21T09:00:00.000Z",
+        "project": "/home/dev/shop-api",
+        "annex": false
+      }
+    },
+    {
+      "id": "antigravity.skills.api-docs",
+      "label": "api-docs",
+      "community": 2,
+      "community_name": "Skills",
+      "file_type": "document",
+      "source_file": "(exemplo) api-docs/SKILL.md",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "skills",
+        "load": "on-demand",
+        "bytes": 4469,
+        "tokensApprox": 1117,
+        "updatedAt": "2026-10-11T09:00:00.000Z",
+        "project": null,
+        "annex": false
+      }
+    },
+    {
+      "id": "antigravity.skills.load-test",
+      "label": "load-test",
+      "community": 2,
+      "community_name": "Skills",
+      "file_type": "document",
+      "source_file": "(exemplo) load-test/SKILL.md",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "skills",
+        "load": "on-demand",
+        "bytes": 3743,
+        "tokensApprox": 936,
+        "updatedAt": "2026-10-11T09:00:00.000Z",
+        "project": null,
+        "annex": false
+      }
+    },
+    {
+      "id": "antigravity.skills.k8s-deploy",
+      "label": "k8s-deploy",
+      "community": 2,
+      "community_name": "Skills",
+      "file_type": "document",
+      "source_file": "(exemplo) k8s-deploy/SKILL.md",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "skills",
+        "load": "on-demand",
+        "bytes": 2930,
+        "tokensApprox": 733,
+        "updatedAt": "2026-10-11T09:00:00.000Z",
+        "project": null,
+        "annex": false
+      }
+    },
+    {
+      "id": "antigravity.skills.sql-review",
+      "label": "sql-review",
+      "community": 2,
+      "community_name": "Skills",
+      "file_type": "document",
+      "source_file": "(exemplo) sql-review/SKILL.md",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "skills",
+        "load": "on-demand",
+        "bytes": 8168,
+        "tokensApprox": 2042,
+        "updatedAt": "2026-10-11T09:00:00.000Z",
+        "project": null,
+        "annex": false
+      }
+    },
+    {
+      "id": "antigravity.skills.perf-budget",
+      "label": "perf-budget",
+      "community": 2,
+      "community_name": "Skills",
+      "file_type": "document",
+      "source_file": "(exemplo) perf-budget/SKILL.md",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "skills",
+        "load": "on-demand",
+        "bytes": 6296,
+        "tokensApprox": 1574,
+        "updatedAt": "2026-10-11T09:00:00.000Z",
+        "project": null,
+        "annex": false
+      }
+    },
+    {
+      "id": "antigravity.memory.m0",
+      "label": "contratos da API",
+      "community": 1,
+      "community_name": "Memória",
+      "file_type": "document",
+      "source_file": "(exemplo) memory/0.md",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "memory",
+        "load": "on-demand",
+        "bytes": 1953,
+        "tokensApprox": 488,
+        "updatedAt": "2026-10-16T09:00:00.000Z",
+        "project": "/home/dev/shop-api",
+        "annex": false
+      }
+    },
+    {
+      "id": "antigravity.memory.m1",
+      "label": "limites de carga",
+      "community": 1,
+      "community_name": "Memória",
+      "file_type": "document",
+      "source_file": "(exemplo) memory/1.md",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "memory",
+        "load": "on-demand",
+        "bytes": 2816,
+        "tokensApprox": 704,
+        "updatedAt": "2026-10-17T09:00:00.000Z",
+        "project": "/home/dev/shop-api",
+        "annex": false
+      }
+    },
+    {
+      "id": "antigravity.memory.m2",
+      "label": "deploy em staging",
+      "community": 1,
+      "community_name": "Memória",
+      "file_type": "document",
+      "source_file": "(exemplo) memory/2.md",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "memory",
+        "load": "on-demand",
+        "bytes": 1730,
+        "tokensApprox": 433,
+        "updatedAt": "2026-10-18T09:00:00.000Z",
+        "project": "/home/dev/shop-api",
+        "annex": false
+      }
+    },
+    {
+      "id": "antigravity.sessions.s0",
+      "label": "checkout · shop-api",
+      "community": 3,
+      "community_name": "Sessões",
+      "file_type": "document",
+      "source_file": "(exemplo) sessão",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "sessions",
+        "load": "history",
+        "bytes": 17891829,
+        "tokensApprox": 4472957,
+        "updatedAt": "2026-10-01T09:00:00.000Z",
+        "project": "/home/dev/shop-api",
+        "annex": false
+      }
+    },
+    {
+      "id": "antigravity.sessions.s1",
+      "label": "login social · shop-api",
+      "community": 3,
+      "community_name": "Sessões",
+      "file_type": "document",
+      "source_file": "(exemplo) sessão",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "sessions",
+        "load": "history",
+        "bytes": 6786101,
+        "tokensApprox": 1696525,
+        "updatedAt": "2026-10-02T09:00:00.000Z",
+        "project": "/home/dev/shop-api",
+        "annex": false
+      }
+    },
+    {
+      "id": "antigravity.sessions.s2",
+      "label": "relatório de vendas · shop-api",
+      "community": 3,
+      "community_name": "Sessões",
+      "file_type": "document",
+      "source_file": "(exemplo) sessão",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "sessions",
+        "load": "history",
+        "bytes": 12810972,
+        "tokensApprox": 3202743,
+        "updatedAt": "2026-10-03T09:00:00.000Z",
+        "project": "/home/dev/shop-api",
+        "annex": false
+      }
+    },
+    {
+      "id": "antigravity.sessions.s3",
+      "label": "cache de produtos · shop-api",
+      "community": 3,
+      "community_name": "Sessões",
+      "file_type": "document",
+      "source_file": "(exemplo) sessão",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "sessions",
+        "load": "history",
+        "bytes": 12818278,
+        "tokensApprox": 3204570,
+        "updatedAt": "2026-10-04T09:00:00.000Z",
+        "project": "/home/dev/shop-api",
+        "annex": false
+      }
+    },
+    {
+      "id": "antigravity.sessions.s4",
+      "label": "tela de perfil · shop-api",
+      "community": 3,
+      "community_name": "Sessões",
+      "file_type": "document",
+      "source_file": "(exemplo) sessão",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "sessions",
+        "load": "history",
+        "bytes": 15604463,
+        "tokensApprox": 3901116,
+        "updatedAt": "2026-10-05T09:00:00.000Z",
+        "project": "/home/dev/shop-api",
+        "annex": false
+      }
+    },
+    {
+      "id": "antigravity.sessions.s5",
+      "label": "migração do banco · shop-api",
+      "community": 3,
+      "community_name": "Sessões",
+      "file_type": "document",
+      "source_file": "(exemplo) sessão",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "sessions",
+        "load": "history",
+        "bytes": 3024328,
+        "tokensApprox": 756082,
+        "updatedAt": "2026-10-06T09:00:00.000Z",
+        "project": "/home/dev/shop-api",
+        "annex": false
+      }
+    },
+    {
+      "id": "antigravity.sessions.s6",
+      "label": "testes de carga · shop-api",
+      "community": 3,
+      "community_name": "Sessões",
+      "file_type": "document",
+      "source_file": "(exemplo) sessão",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "sessions",
+        "load": "history",
+        "bytes": 8691075,
+        "tokensApprox": 2172769,
+        "updatedAt": "2026-10-07T09:00:00.000Z",
+        "project": "/home/dev/shop-api",
+        "annex": false
+      }
+    },
+    {
+      "id": "antigravity.sessions.s7",
+      "label": "deploy · shop-api",
+      "community": 3,
+      "community_name": "Sessões",
+      "file_type": "document",
+      "source_file": "(exemplo) sessão",
+      "source_location": "L1",
+      "cityphy": {
+        "section": "sessions",
+        "load": "history",
+        "bytes": 9707793,
+        "tokensApprox": 2426948,
+        "updatedAt": "2026-10-08T09:00:00.000Z",
+        "project": "/home/dev/shop-api",
+        "annex": false
+      }
+    }
+  ],
+  "links": [
+    {
+      "source": "antigravity.ground.shop-api.skills-list",
+      "target": "antigravity.skills.api-docs",
+      "relation": "lists",
+      "confidence": "EXTRACTED",
+      "weight": 1
+    },
+    {
+      "source": "antigravity.ground.shop-api.skills-list",
+      "target": "antigravity.skills.load-test",
+      "relation": "lists",
+      "confidence": "EXTRACTED",
+      "weight": 1
+    },
+    {
+      "source": "antigravity.ground.shop-api.skills-list",
+      "target": "antigravity.skills.k8s-deploy",
+      "relation": "lists",
+      "confidence": "EXTRACTED",
+      "weight": 1
+    },
+    {
+      "source": "antigravity.ground.shop-api.skills-list",
+      "target": "antigravity.skills.sql-review",
+      "relation": "lists",
+      "confidence": "EXTRACTED",
+      "weight": 1
+    },
+    {
+      "source": "antigravity.ground.shop-api.skills-list",
+      "target": "antigravity.skills.perf-budget",
+      "relation": "lists",
+      "confidence": "EXTRACTED",
+      "weight": 1
+    },
+    {
+      "source": "antigravity.ground.memory-index",
+      "target": "antigravity.memory.m0",
+      "relation": "indexes",
+      "confidence": "EXTRACTED",
+      "weight": 1
+    },
+    {
+      "source": "antigravity.ground.memory-index",
+      "target": "antigravity.memory.m1",
+      "relation": "indexes",
+      "confidence": "EXTRACTED",
+      "weight": 1
+    },
+    {
+      "source": "antigravity.memory.m1",
+      "target": "antigravity.memory.m0",
+      "relation": "links_to",
+      "confidence": "EXTRACTED",
+      "weight": 1
+    },
+    {
+      "source": "antigravity.ground.memory-index",
+      "target": "antigravity.memory.m2",
+      "relation": "indexes",
+      "confidence": "EXTRACTED",
+      "weight": 1
+    },
+    {
+      "source": "antigravity.memory.m2",
+      "target": "antigravity.memory.m1",
+      "relation": "links_to",
+      "confidence": "EXTRACTED",
+      "weight": 1
+    }
+  ],
+  "hyperedges": []
+}

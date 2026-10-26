@@ -1,0 +1,12 @@
+node_modules/
+dist/
+graphify-out/
+!examples/data/*/graphify-out/
+cityphy.config.json
+/data/
+*.log
+.env
+.env.*
+
+# diário de desenvolvimento: só local
+docs/DIARY.md

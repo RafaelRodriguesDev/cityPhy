@@ -1,0 +1,7 @@
+{
+  "$comment": "Copy to cityphy.config.json (not committed) and edit. Paths may use / or \\.",
+  "dataDir": "./data",
+  "projects": [
+    { "name": "my-project", "path": "C:/path/to/my-project", "exclude": ["**/node_modules/", "**/dist/"] }
+  ]
+}
