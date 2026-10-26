@@ -104,6 +104,51 @@ function writeTower(a: ExampleAgent): void {
   t.write(join(OUT, `torre-${a.id}`));
 }
 
+/** Fictional consumption (last 7 days) and per-model usage, so the example shows those towers too. */
+function writeUsage(): void {
+  const today = new Date();
+  const days = (scale: number) =>
+    Array.from({ length: 7 }, (_, i) => {
+      const d = new Date(today);
+      d.setDate(d.getDate() - (6 - i));
+      const p = (n: number) => String(n).padStart(2, '0');
+      const fresh = Math.floor((0.3 + rnd()) * scale);
+      return { date: `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`, fresh, cached: fresh * 12, calls: Math.floor(fresh / 4000) };
+    });
+  const tool = (agent: string, scale: number, limits: { daily: number | null; weekly: number | null }, windows: unknown[] = []) => {
+    const list = days(scale);
+    const week = list.reduce((t, d) => ({ date: 'semana', fresh: t.fresh + d.fresh, cached: t.cached + d.cached, calls: t.calls + d.calls }), { date: 'semana', fresh: 0, cached: 0, calls: 0 });
+    return { agent, days: list, today: list[6], week, windows, limits };
+  };
+  const consumption = [
+    tool('claude', 1_200_000, { daily: 2_000_000, weekly: 10_000_000 }),
+    tool('codex', 500_000, { daily: null, weekly: null }, [
+      { label: '5 horas', minutes: 300, usedPercent: 38, resetsAt: null, seenAt: today.toISOString() },
+      { label: 'semana', minutes: 10080, usedPercent: 61, resetsAt: null, seenAt: today.toISOString() },
+    ]),
+    tool('antigravity', 300_000, { daily: null, weekly: null }),
+  ];
+  writeFileSync(join(OUT, 'consumption.json'), JSON.stringify(consumption, null, 2));
+
+  const row = (model: string, effort: string, calls: number) => {
+    const input = calls * 900, cacheRead = calls * 30_000, output = calls * 700;
+    const sessions = Math.max(1, Math.floor(calls / 60));
+    return { model, effort, calls, input, cacheWrite: calls * 400, cacheRead, output, reasoning: Math.floor(output * (effort === 'high' ? 0.6 : effort === 'medium' ? 0.35 : 0.1)), sessions,
+      sessionTotals: Array.from({ length: sessions }, () => Math.floor((input + cacheRead + output) / sessions * (0.5 + rnd()))),
+      sessionCalls: Array.from({ length: sessions }, () => Math.floor(calls / sessions * (0.5 + rnd())) + 1) };
+  };
+  const agent = (rows: ReturnType<typeof row>[], projects: string[]) => ({ projects: Object.fromEntries(projects.map((p) => [p, { sessions: 1, models: {}, tools: {}, breakdown: [] }])), breakdown: rows });
+  const usage = {
+    multipliers: { 'model-pro': { multiplier: 2 }, 'model-fast': { multiplier: 0.5 }, 'gpt-model': { multiplier: 1 } },
+    agents: {
+      claude: agent([row('model-pro', 'padrão', 900), row('model-fast', 'padrão', 400)], ['shop-api', 'web-store']),
+      codex: agent([row('gpt-model', 'low', 300), row('gpt-model', 'medium', 500), row('gpt-model', 'high', 200)], ['web-store', 'mobile-app']),
+    },
+  };
+  writeFileSync(join(OUT, 'usage.json'), JSON.stringify(usage, null, 2));
+}
+
 PROJECTS.forEach(writeProject);
 AGENTS.forEach(writeTower);
+writeUsage();
 console.log(`[cityphy] cidade de exemplo em ${OUT}`);

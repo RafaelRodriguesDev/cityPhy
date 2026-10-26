@@ -1,0 +1,200 @@
+{
+  "multipliers": {
+    "model-pro": {
+      "multiplier": 2
+    },
+    "model-fast": {
+      "multiplier": 0.5
+    },
+    "gpt-model": {
+      "multiplier": 1
+    }
+  },
+  "agents": {
+    "claude": {
+      "projects": {
+        "shop-api": {
+          "sessions": 1,
+          "models": {},
+          "tools": {},
+          "breakdown": []
+        },
+        "web-store": {
+          "sessions": 1,
+          "models": {},
+          "tools": {},
+          "breakdown": []
+        }
+      },
+      "breakdown": [
+        {
+          "model": "model-pro",
+          "effort": "padrão",
+          "calls": 900,
+          "input": 810000,
+          "cacheWrite": 360000,
+          "cacheRead": 27000000,
+          "output": 630000,
+          "reasoning": 63000,
+          "sessions": 15,
+          "sessionTotals": [
+            1063055,
+            2668855,
+            1790755,
+            2017306,
+            2488870,
+            2795925,
+            2545753,
+            1339701,
+            1369409,
+            2009237,
+            1493736,
+            2186828,
+            1969147,
+            2681419,
+            2494711
+          ],
+          "sessionCalls": [
+            76,
+            61,
+            62,
+            43,
+            78,
+            57,
+            51,
+            38,
+            58,
+            65,
+            89,
+            55,
+            87,
+            66,
+            34
+          ]
+        },
+        {
+          "model": "model-fast",
+          "effort": "padrão",
+          "calls": 400,
+          "input": 360000,
+          "cacheWrite": 160000,
+          "cacheRead": 12000000,
+          "output": 280000,
+          "reasoning": 28000,
+          "sessions": 6,
+          "sessionTotals": [
+            2723174,
+            1057670,
+            2321180,
+            2940636,
+            2983901,
+            1229256
+          ],
+          "sessionCalls": [
+            68,
+            39,
+            97,
+            67,
+            39,
+            48
+          ]
+        }
+      ]
+    },
+    "codex": {
+      "projects": {
+        "web-store": {
+          "sessions": 1,
+          "models": {},
+          "tools": {},
+          "breakdown": []
+        },
+        "mobile-app": {
+          "sessions": 1,
+          "models": {},
+          "tools": {},
+          "breakdown": []
+        }
+      },
+      "breakdown": [
+        {
+          "model": "gpt-model",
+          "effort": "low",
+          "calls": 300,
+          "input": 270000,
+          "cacheWrite": 120000,
+          "cacheRead": 9000000,
+          "output": 210000,
+          "reasoning": 21000,
+          "sessions": 5,
+          "sessionTotals": [
+            2147157,
+            2603096,
+            1941033,
+            2268530,
+            2424859
+          ],
+          "sessionCalls": [
+            63,
+            66,
+            37,
+            62,
+            84
+          ]
+        },
+        {
+          "model": "gpt-model",
+          "effort": "medium",
+          "calls": 500,
+          "input": 450000,
+          "cacheWrite": 200000,
+          "cacheRead": 15000000,
+          "output": 350000,
+          "reasoning": 122499,
+          "sessions": 8,
+          "sessionTotals": [
+            2425266,
+            1410737,
+            2367529,
+            2713537,
+            1706030,
+            2187376,
+            2558699,
+            2384479
+          ],
+          "sessionCalls": [
+            39,
+            53,
+            82,
+            66,
+            47,
+            57,
+            43,
+            47
+          ]
+        },
+        {
+          "model": "gpt-model",
+          "effort": "high",
+          "calls": 200,
+          "input": 180000,
+          "cacheWrite": 80000,
+          "cacheRead": 6000000,
+          "output": 140000,
+          "reasoning": 84000,
+          "sessions": 3,
+          "sessionTotals": [
+            1362520,
+            2516057,
+            2366550
+          ],
+          "sessionCalls": [
+            91,
+            75,
+            73
+          ]
+        }
+      ]
+    }
+  }
+}

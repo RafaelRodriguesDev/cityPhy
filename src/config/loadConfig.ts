@@ -18,6 +18,8 @@ export interface CityphyConfig {
   graphifyBin?: string;
   /** Relative cost of each model in your plan (1 = 1x, 2 = 2x, 0 = free). Models left out show "não informado". */
   models?: Record<string, { multiplier?: number }>;
+  /** Your own limits per tool, in fresh tokens, for the consumption tower (left out = "limite não definido"). */
+  tools?: Record<string, { dailyLimit?: number; weeklyLimit?: number }>;
 }
 
 /** cityPhy's own folder (two levels above this file), where cityphy.config.json lives. */
@@ -34,5 +36,5 @@ export function loadConfig(): CityphyConfig {
   const raw: Partial<CityphyConfig> = existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : {};
   const dataDir = resolve(base, process.env.CITYPHY_DATA ?? raw.dataDir ?? './data');
   const projects = (raw.projects ?? []).map((p) => ({ ...p, path: resolve(base, p.path) }));
-  return { dataDir, projects, graphifyBin: raw.graphifyBin, models: raw.models ?? {} };
+  return { dataDir, projects, graphifyBin: raw.graphifyBin, models: raw.models ?? {}, tools: raw.tools ?? {} };
 }

@@ -37,7 +37,12 @@ export function bandHeight(tokens: number): number {
  * The models of an agent as towers next to its headquarters, one band per reasoning level
  * (stacked lowest level first). Height = tokens used; a model never used is not drawn.
  */
-export function buildModelTowers(agent: string, rows: ModelBreakdown[], origin: { x: number; z: number }): { group: THREE.Group; bands: ModelBand[]; mesh: THREE.InstancedMesh | null; count: number } {
+export function buildModelTowers(
+  agent: string,
+  rows: ModelBreakdown[],
+  origin: { x: number; z: number },
+  firstSlot = 0, // slots already taken west of the annex (e.g. by the consumption tower)
+): { group: THREE.Group; bands: ModelBand[]; mesh: THREE.InstancedMesh | null; count: number } {
   const group = new THREE.Group();
   const models = groupByModel(rows);
   const bandsTotal = models.reduce((n, m) => n + m.rows.length, 0);
@@ -52,7 +57,7 @@ export function buildModelTowers(agent: string, rows: ModelBreakdown[], origin: 
   const m = new THREE.Matrix4();
   let index = 0;
   models.forEach((model, i) => {
-    const x = origin.x + (FIRST_MODEL_X - TOWER_X) - i * MODEL_SPACING;
+    const x = origin.x + (FIRST_MODEL_X - TOWER_X) - (i + firstSlot) * MODEL_SPACING;
     let y = 0;
     for (const row of model.rows) {
       const h = bandHeight(row.input + row.cacheWrite + row.cacheRead + row.output);
