@@ -27,6 +27,12 @@ function node(script: string, args: string[]): number {
   return spawnSync(process.execPath, [join(REPO_ROOT, script), ...args], { stdio: 'inherit', cwd: REPO_ROOT }).status ?? 1;
 }
 
+// Expected problems (e.g. a folder that is not a cityPhy project) print one clear line, not a stack trace.
+process.on('uncaughtException', (e) => {
+  console.error(`[cityphy] ${e instanceof Error ? e.message : String(e)}`);
+  process.exit(1);
+});
+
 switch (command) {
   case 'setup':
     process.exitCode = await setupCommand(config, rest);
