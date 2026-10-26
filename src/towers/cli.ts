@@ -1,5 +1,6 @@
 import { join } from 'node:path';
 import { loadConfig, type ProjectConfig } from '../config/loadConfig.ts';
+import { agentWorkspaces } from '../config/groups.ts';
 
 export interface TowerArgs {
   /** Projects the tower covers: --project <path> (repeatable), else every project in the config. */
@@ -17,9 +18,11 @@ export function towerArgs(agent: string, argv = process.argv): TowerArgs {
     if (argv[i] === '--project' && argv[i + 1]) picked.push(argv[++i]);
     else if (argv[i] === '--out' && argv[i + 1]) out = argv[++i];
   }
+  // Agents open a monorepo at its root, so a group counts once (its root), not once per member.
+  const workspaces = agentWorkspaces(config.projects);
   const projects = picked.length
-    ? picked.map((p) => config.projects.find((c) => samePath(c.path, p)) ?? { name: p.split(/[\\/]/).pop() ?? p, path: p })
-    : config.projects;
+    ? picked.map((p) => workspaces.find((c) => samePath(c.path, p)) ?? { name: p.split(/[\\/]/).pop() ?? p, path: p })
+    : workspaces;
   return { projects, out: out ?? join(config.dataDir, `torre-${agent}`) };
 }
 

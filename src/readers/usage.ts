@@ -1,6 +1,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import type { ProjectConfig } from '../config/loadConfig.ts';
+import { agentWorkspaces } from '../config/groups.ts';
 import { USAGE_READERS } from '../metrics/usage/index.ts';
 import { mergeBreakdowns, type AgentUsage, type ModelBreakdown } from '../metrics/usage/types.ts';
 import type { Multipliers } from '../metrics/modelStats.ts';
@@ -16,7 +17,8 @@ export async function readUsage(projects: ProjectConfig[], multipliers: Multipli
   const agents: UsageReport['agents'] = {};
   for (const [agent, read] of Object.entries(USAGE_READERS)) {
     const per: Record<string, AgentUsage> = {};
-    for (const p of projects) {
+    // A group is read once at its root (where the agents work), so its usage is not counted per member.
+    for (const p of agentWorkspaces(projects)) {
       const u = await read(p.path);
       if (u.breakdown.length) per[p.name] = u;
     }

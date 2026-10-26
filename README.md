@@ -127,6 +127,8 @@ npm run dev                  # http://127.0.0.1:5190
 - `exclude` vai para o `graphify extract --exclude`. Se o `graphify` não estiver no `PATH`, defina `GRAPHIFY_BIN` ou `graphifyBin`.
 - Opcional, só no seu config local: `"models": { "<modelo>": { "multiplier": 2 } }` (custo relativo 1x/2x/0x do seu plano) e `"tools": { "claude": { "dailyLimit": 2000000, "weeklyLimit": 10000000 } }` (o 100% da torre de consumo, em tokens novos).
 
+- **Monorepo** (várias pastas de sistemas numa raiz que as IAs abrem): um projeto por sistema com `"group": { "name": "Empresa", "path": "C:/codigo/empresa" }`. Cada sistema tem o seu grafo e condomínio; sessões, memória e energia da raiz ficam com o grupo. `npm run refresh -- --project <nome>` atualiza só um sistema.
+
 **Leitores de uso hoje:** Claude Code (modelo e tokens por chamada), Codex (modelo, nível de raciocínio, tokens e o % real do plano) e Antigravity (modelo, nível e tokens). Cada ferramenta acrescenta o seu em `src/metrics/usage/` e `src/metrics/consumption/`.
 
 ## O que o `setup` pergunta (por projeto)

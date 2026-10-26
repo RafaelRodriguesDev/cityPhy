@@ -79,9 +79,11 @@ async function main() {
     pulseSets.push(p);
   };
 
-  // Project condominiums across the street, each with its own color.
+  // Project condominiums across the street, each with its own color (members of a group share theirs).
+  const groupOf = (p: ProjectSummary) => (p as ProjectSummary & { group?: { name: string; path: string } }).group;
+  const colorKeys = [...new Set(projects.map((p) => groupOf(p)?.name ?? p.name))];
   const condos = projects.map((project, i) => {
-    const color = projectColor(i);
+    const color = projectColor(colorKeys.indexOf(groupOf(project)?.name ?? project.name));
     const block = buildProjectBlock(project, projectSpots[i].origin);
     const fence = buildFence(projectSpots[i].lot, project.name, color.getHex());
     stage.scene.add(block.group, fence.group);
@@ -104,7 +106,8 @@ async function main() {
 
     const worksOn = [...new Set(graph.nodes.map((n) => n.cityphy.project).filter((p): p is string => !!p))];
     for (const condo of condos) {
-      if (!worksOn.some((p) => samePath(p, condo.project.root))) continue;
+      const groupRoot = groupOf(condo.project)?.path;
+      if (!worksOn.some((p) => samePath(p, condo.project.root) || (groupRoot && samePath(p, groupRoot)))) continue;
       const line = buildCable(routePowerLine(tower.powerAnchor, condo.fence.entry, posts, condo.slot), condo.color);
       stage.scene.add(line.object);
       addPulses([0, 1, 2].map(() => ({ curve: line.curve, color: condo.color })), 1.4);
@@ -135,7 +138,8 @@ async function main() {
     stage.scene.add(label);
     const anchor = new Vector3(origin.x + 3.5, 2.5, origin.z);
     for (const condo of condos) {
-      if (!usage.agents[agent]?.projects[condo.project.name]) continue;
+      const worked = usage.agents[agent]?.projects;
+      if (!worked?.[condo.project.name] && !worked?.[groupOf(condo.project)?.name ?? '']) continue;
       const line = buildCable(routePowerLine(anchor, condo.fence.entry, posts, condo.slot + agents.length), condo.color);
       stage.scene.add(line.object);
       addPulses([0, 1, 2].map(() => ({ curve: line.curve, color: condo.color })), 1.4);

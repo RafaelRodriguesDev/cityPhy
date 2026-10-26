@@ -128,6 +128,8 @@ npm run dev                  # http://127.0.0.1:5190
 - `exclude` is passed to `graphify extract --exclude`. If `graphify` is not on your `PATH`, set `GRAPHIFY_BIN` or `graphifyBin`.
 - Optional, only in your local config: `"models": { "<model>": { "multiplier": 2 } }` (relative cost 1x/2x/0x in your plan) and `"tools": { "claude": { "dailyLimit": 2000000, "weeklyLimit": 10000000 } }` (the 100% of the consumption tower, in fresh tokens).
 
+- **Monorepo** (several system folders under one root the agents open): one project per system with `"group": { "name": "Company", "path": "C:/code/company" }`. Each system gets its own graph and condominium; sessions, memory and power of the root belong to the group. `npm run refresh -- --project <name>` refreshes one system.
+
 **Usage readers today:** Claude Code (model and tokens per call), Codex (model, reasoning level, tokens and the real plan percent) and Antigravity (model, level and tokens). Each tool adds its own in `src/metrics/usage/` and `src/metrics/consumption/`.
 
 ## What `setup` asks (per project)

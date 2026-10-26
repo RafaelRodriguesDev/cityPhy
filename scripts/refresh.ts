@@ -1,6 +1,7 @@
 ﻿// Refreshes the whole city: the graphify graph of every configured project, then every agent tower.
-// Usage: npm run refresh            (projects + towers)
-//        npm run refresh -- --towers  (towers only)
+// Usage: npm run refresh                      (projects + towers)
+//        npm run refresh -- --towers           (towers only)
+//        npm run refresh -- --project <name>   (one project + towers)
 // Only graphify's local AST pass runs (GRAPHIFY_BACKEND=none): no code leaves the machine.
 import { spawnSync } from 'node:child_process';
 import { existsSync, readdirSync } from 'node:fs';
@@ -23,11 +24,14 @@ function run(cmd: string, args: string[], env: NodeJS.ProcessEnv = {}, shell = f
   return r.status === 0;
 }
 
+// --project <name> refreshes one project only (big monorepo systems take minutes each).
+const only = process.argv.includes('--project') ? process.argv[process.argv.indexOf('--project') + 1] : null;
+
 if (!towersOnly) {
-  for (const p of config.projects) {
+  for (const p of config.projects.filter((x) => !only || x.name === only)) {
     const out = join(config.dataDir, p.name);
     const excludes = (p.exclude ?? []).flatMap((e) => ['--exclude', q(e)]);
-    const env = { GRAPHIFY_BACKEND: 'none' };
+    const env: NodeJS.ProcessEnv = { GRAPHIFY_BACKEND: 'none', ...(config.maxGraphBytes ? { GRAPHIFY_MAX_GRAPH_BYTES: String(config.maxGraphBytes) } : {}) };
     if (run(graphify, ['extract', q(p.path), '--code-only', '--out', q(out), ...excludes], env, isWindows)) {
       run(graphify, ['cluster-only', q(out), '--no-label', '--graph', q(join(out, 'graphify-out', 'graph.json'))], env, isWindows);
     }

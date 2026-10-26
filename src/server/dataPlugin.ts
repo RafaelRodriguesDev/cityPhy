@@ -23,7 +23,14 @@ export function dataPlugin(dataDir: string, config: CityphyConfig | null): Plugi
     configureServer(server) {
       server.middlewares.use('/api/towers', (_req, res) => sendJson(res, readTowers(dataDir)));
       server.middlewares.use('/api/projects', (_req, res) =>
-        sendJson(res, readProjects(dataDir).map((p) => ({ ...p, cityphy: readProjectExtras(dataDir, p.name) }))),
+        sendJson(
+          res,
+          readProjects(dataDir).map((p) => {
+            // Members of a group carry the group (root path) and its memory, where the agents' sessions are recorded.
+            const group = config?.projects.find((c) => c.name === p.name)?.group;
+            return { ...p, cityphy: readProjectExtras(dataDir, p.name), ...(group ? { group, groupCityphy: readProjectExtras(dataDir, group.name) } : {}) };
+          }),
+        ),
       );
       server.middlewares.use('/api/consumption', (_req, res) => {
         if (!config) return sendJson(res, readExampleConsumption(dataDir));

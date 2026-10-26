@@ -5,6 +5,8 @@ All notable changes to cityPhy. Format based on [Keep a Changelog](https://keepa
 ## [Unreleased]
 
 ### Added
+- **Project groups** for monorepos (`group` in the config): one graph and condominium per system, while sessions,
+  memory, hooks and power lines of the root belong to the group. `refresh --project <name>` and `maxGraphBytes`.
 - **Model towers**: one tower per model next to each agent, one band per reasoning level; panel with summary, levels,
   a calculator by number of calls (fresh vs cached tokens, × relative cost) and a comparison between models.
 - **Consumption tower**: glass blocks for the week and the day (or the tool's 5-hour window) that fill up to 100%, using

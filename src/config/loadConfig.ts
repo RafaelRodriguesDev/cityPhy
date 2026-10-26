@@ -8,6 +8,11 @@ export interface ProjectConfig {
   path: string;
   /** graphify --exclude patterns. */
   exclude?: string[];
+  /**
+   * Monorepos: several projects (one per system) that share the folder the agents open. Sessions,
+   * memory and power lines of the group root belong to the group; each member keeps its own graph.
+   */
+  group?: { name: string; path: string };
 }
 
 export interface CityphyConfig {
@@ -20,6 +25,8 @@ export interface CityphyConfig {
   models?: Record<string, { multiplier?: number }>;
   /** Your own limits per tool, in fresh tokens, for the consumption tower (left out = "limite não definido"). */
   tools?: Record<string, { dailyLimit?: number; weeklyLimit?: number }>;
+  /** Raise graphify's graph size cap (bytes) only when you mean it; default keeps graphify's own limit. */
+  maxGraphBytes?: number;
 }
 
 /** cityPhy's own folder (two levels above this file), where cityphy.config.json lives. */
@@ -35,6 +42,10 @@ export function loadConfig(): CityphyConfig {
   const base = dirname(file);
   const raw: Partial<CityphyConfig> = existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : {};
   const dataDir = resolve(base, process.env.CITYPHY_DATA ?? raw.dataDir ?? './data');
-  const projects = (raw.projects ?? []).map((p) => ({ ...p, path: resolve(base, p.path) }));
-  return { dataDir, projects, graphifyBin: raw.graphifyBin, models: raw.models ?? {}, tools: raw.tools ?? {} };
+  const projects = (raw.projects ?? []).map((p) => ({
+    ...p,
+    path: resolve(base, p.path),
+    ...(p.group ? { group: { name: p.group.name, path: resolve(base, p.group.path) } } : {}),
+  }));
+  return { dataDir, projects, graphifyBin: raw.graphifyBin, models: raw.models ?? {}, tools: raw.tools ?? {}, maxGraphBytes: raw.maxGraphBytes };
 }

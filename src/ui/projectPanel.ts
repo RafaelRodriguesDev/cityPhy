@@ -42,7 +42,7 @@ function optionsTab(x: ProjectExtras | undefined): string {
 
 /** Side panel for a project building, with tabs for the whole condominium. */
 export function showProjectBuilding(panel: HTMLElement, b: ProjectBuilding, linkedAgents: string[]): void {
-  const p = b.project as ProjectSummary & { cityphy?: ProjectExtras };
+  const p = b.project as ProjectSummary & { cityphy?: ProjectExtras; group?: { name: string; path: string }; groupCityphy?: ProjectExtras };
   panel.innerHTML = `
     <button class="close" aria-label="Fechar">×</button>
     <p class="kicker">Condomínio ${escapeHtml(p.name)} · prédio ${escapeHtml(b.part.name)}</p>
@@ -55,10 +55,12 @@ export function showProjectBuilding(panel: HTMLElement, b: ProjectBuilding, link
         <dt>Prédio</dt><dd>${escapeHtml(b.part.name)}: ${n(b.part.files)} arquivos · ${n(b.part.nodes)} símbolos</dd>
         <dt>Projeto</dt><dd>${n(p.nodes)} nós · ${n(p.edges)} ligações</dd>
         <dt>Raiz</dt><dd class="path">${escapeHtml(p.root)}</dd>
+        ${p.group ? `<dt>Grupo</dt><dd>${escapeHtml(p.group.name)} <span class="muted-inline">(as IAs abrem ${escapeHtml(p.group.path)}; memória do grupo)</span></dd>` : ''}
         <dt>Energia de</dt><dd>${linkedAgents.length ? linkedAgents.map(escapeHtml).join(', ') : 'nenhuma IA ligada'}</dd></dl>`,
     },
     { label: 'Economia', html: savingsTab(p.cityphy) },
-    { label: 'Memória', html: memoryTab(p.cityphy) },
+    // In a group, sessions and memory are recorded at the group root.
+    { label: p.group ? 'Memória do grupo' : 'Memória', html: memoryTab(p.groupCityphy ?? p.cityphy) },
     { label: 'Opções', html: optionsTab(p.cityphy) },
   ]);
   panel.hidden = false;

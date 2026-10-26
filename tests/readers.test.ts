@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { summarize } from '../src/readers/projects.ts';
 import { samePath } from '../src/towers/cli.ts';
 import { projectKey } from '../src/towers/claude/sources.ts';
+import { agentWorkspaces } from '../src/config/groups.ts';
+import { findProject, groupMembers } from '../src/memory/paths.ts';
 
 describe('project summary', () => {
   it('groups files by top folder and skips external symbols', () => {
@@ -22,6 +24,27 @@ describe('project summary', () => {
       { name: '(raiz)', nodes: 1, files: 1 },
     ]);
     expect(s.edges).toBe(3);
+  });
+});
+
+describe('project groups (monorepos)', () => {
+  const group = { name: 'Corp', path: 'C:/code/corp' };
+  const config = {
+    dataDir: 'C:/data',
+    projects: [
+      { name: 'Corp-API', path: 'C:/code/corp/API', group },
+      { name: 'Corp-Web', path: 'C:/code/corp/Web', group },
+      { name: 'solo', path: 'C:/code/solo' },
+    ],
+  };
+  it('lets agents work at the group root once, not once per member', () => {
+    expect(agentWorkspaces(config.projects).map((w) => w.name)).toEqual(['solo', 'Corp']);
+  });
+  it('finds the member for a folder inside it and the group for the root', () => {
+    expect(findProject(config, 'C:\\code\\corp\\API\\src')?.name).toBe('Corp-API');
+    expect(findProject(config, 'C:\\code\\corp')?.name).toBe('Corp');
+    expect(findProject(config, 'C:/code/corp/tools')?.name).toBe('Corp');
+    expect(groupMembers(config, findProject(config, 'Corp')!).map((m) => m.name)).toEqual(['Corp-API', 'Corp-Web']);
   });
 });
 

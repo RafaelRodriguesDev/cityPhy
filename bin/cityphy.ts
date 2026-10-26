@@ -16,7 +16,7 @@ import { flag, positional, resolveProject } from '../src/cli/args.ts';
 import { sessionContext } from '../src/memory/inject.ts';
 import { readLessons } from '../src/memory/lessons.ts';
 import { readOptions } from '../src/memory/options.ts';
-import { projectDir, projectGraph } from '../src/memory/paths.ts';
+import { groupMembers, projectDir, projectGraph } from '../src/memory/paths.ts';
 import { loggedQuery } from '../src/metrics/queryLog.ts';
 import { setupCommand } from '../src/setup/setupCommand.ts';
 
@@ -53,6 +53,11 @@ switch (command) {
     const question = positional(rest);
     if (!question) throw new Error('uso: cityphy query "<pergunta>" [--project P]');
     const project = resolveProject(config, rest);
+    const members = groupMembers(config, project);
+    if (members.length) {
+      // A group root has no graph of its own: each system has one.
+      throw new Error(`${project.name} é um grupo; escolha o sistema: ${members.map((m) => `--project ${m.name}`).join(' | ')}`);
+    }
     const budget = Number(flag(rest, '--budget') ?? 2000);
     console.log(loggedQuery(project, projectGraph(config, project), projectDir(config, project), question, flag(rest, '--agent') ?? 'desconhecido', budget));
     break;
