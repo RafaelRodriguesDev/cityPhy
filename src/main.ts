@@ -19,22 +19,35 @@ import { showFloor } from './ui/floorPanel.ts';
 import { showProjectBuilding } from './ui/projectPanel.ts';
 import { renderSummary, type ProjectLegend } from './ui/towerSummary.ts';
 import { escapeHtml, formatTokens } from './ui/format.ts';
+import { showModel } from './ui/modelPanel.ts';
+import { buildModelTowers, type ModelBand } from './scene/modelTowers.ts';
+import { makeLabel } from './scene/label.ts';
+import { groupByModel } from './metrics/modelStats.ts';
+import type { UsageReport } from './readers/usage.ts';
 
-type Item = PlacedFloor | ProjectBuilding;
+type Item = PlacedFloor | ProjectBuilding | ModelBand;
 const isFloor = (it: Item): it is PlacedFloor => 'node' in it;
+const isModel = (it: Item): it is ModelBand => 'kind' in it && it.kind === 'model';
+const AGENT_NAMES: Record<string, string> = { claude: 'Claude', codex: 'Codex', antigravity: 'Antigravity' };
 const samePath = (a: string, b: string) => a.replace(/[\\/]+/g, '/').toLowerCase() === b.replace(/[\\/]+/g, '/').toLowerCase();
 
 async function main() {
-  const [towers, projects] = (await Promise.all([
+  const [towers, projects, usage] = (await Promise.all([
     fetch('/api/towers').then((r) => r.json()),
     fetch('/api/projects').then((r) => r.json()),
-  ])) as [TowerGraph[], ProjectSummary[]];
+    fetch('/api/usage').then((r) => r.json()),
+  ])) as [TowerGraph[], ProjectSummary[], UsageReport];
 
   const stage = createStage(document.getElementById('scene')!);
   const tooltip = document.getElementById('tooltip')!;
   const panel = document.getElementById('panel')!;
 
-  const towerSpots = layoutTowers(towers.length);
+  // One complex per agent: its tower (when it has one) plus one tower per model it used.
+  const towerAgents = towers.map((t) => t.graph.cityphy.agent);
+  const usageOnly = Object.keys(usage.agents).filter((a) => !towerAgents.includes(a) && groupByModel(usage.agents[a].breakdown).length);
+  const agents = [...towerAgents, ...usageOnly];
+  const rowsOf = (a: string) => usage.agents[a]?.breakdown ?? [];
+  const towerSpots = layoutTowers(agents.map((a) => groupByModel(rowsOf(a)).length));
   const projectSpots = layoutProjects(projects.map(projectRowLength), PROJECT_BUILDING_WIDTH);
   const lots = [...towerSpots, ...projectSpots].map((s) => s.lot);
   const { minZ, maxZ } = cityExtent(lots);
@@ -88,6 +101,30 @@ async function main() {
     }
   });
 
+  // Model towers of every complex; agents known only from usage logs also power the projects they worked on.
+  const nameOf = (a: string) => towers.find((t) => t.graph.cityphy.agent === a)?.graph.cityphy.agentName ?? AGENT_NAMES[a] ?? a;
+  agents.forEach((agent, i) => {
+    const origin = towerSpots[i].origin;
+    const models = buildModelTowers(agent, rowsOf(agent), origin);
+    stage.scene.add(models.group);
+    items.push(...models.bands);
+    if (models.mesh) meshes.push(models.mesh);
+    if (towerAgents.includes(agent)) return;
+
+    stage.scene.add(buildFence(towerSpots[i].lot, nameOf(agent)).group);
+    const label = makeLabel(nameOf(agent), 1.4);
+    label.position.set(origin.x, 4, origin.z);
+    stage.scene.add(label);
+    const anchor = new Vector3(origin.x + 3.5, 2.5, origin.z);
+    for (const condo of condos) {
+      if (!usage.agents[agent].projects[condo.project.name]) continue;
+      const line = buildCable(routePowerLine(anchor, condo.fence.entry, posts, condo.slot + agents.length), condo.color);
+      stage.scene.add(line.object);
+      addPulses([0, 1, 2].map(() => ({ curve: line.curve, color: condo.color })), 1.4);
+      condo.agents.push(nameOf(agent));
+    }
+  });
+
   // Inside each powered condominium, power runs from the gatehouse to every building.
   for (const condo of condos) {
     if (!condo.agents.length) continue;
@@ -110,12 +147,15 @@ async function main() {
       }
       tooltip.innerHTML = isFloor(it)
         ? `<strong>${escapeHtml(it.node.label)}</strong><br>${formatTokens(it.node.cityphy.tokensApprox)}`
-        : `<strong>${escapeHtml(it.part.name)}</strong><br>${it.part.files.toLocaleString('pt-BR')} arquivos`;
+        : isModel(it)
+          ? `<strong>${escapeHtml(it.model)}</strong> · ${escapeHtml(it.row.effort)}<br>${(it.row.input + it.row.cacheWrite + it.row.cacheRead + it.row.output).toLocaleString('pt-BR')} tokens`
+          : `<strong>${escapeHtml(it.part.name)}</strong><br>${it.part.files.toLocaleString('pt-BR')} arquivos`;
       tooltip.style.transform = `translate(${x + 14}px, ${y + 14}px)`;
       tooltip.hidden = false;
     },
     select(it) {
       if (isFloor(it)) showFloor(panel, it, graphOf.get(it.agent)!);
+      else if (isModel(it)) showModel(panel, it, nameOf(it.agent), rowsOf(it.agent), usage.multipliers, Object.keys(usage.agents[it.agent]?.projects ?? {}));
       else showProjectBuilding(panel, it, condos.find((c) => c.project === it.project)?.agents ?? []);
     },
   });

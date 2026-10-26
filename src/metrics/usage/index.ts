@@ -1,4 +1,5 @@
 import { claudeUsage } from './claudeUsage.ts';
+import { codexUsage } from './codexUsage.ts';
 import type { AgentUsage } from './types.ts';
 
 /**
@@ -7,4 +8,5 @@ import type { AgentUsage } from './types.ts';
  */
 export const USAGE_READERS: Record<string, (projectPath: string) => Promise<AgentUsage>> = {
   claude: claudeUsage,
+  codex: codexUsage,
 };

@@ -24,15 +24,23 @@ export interface Lot {
   gate: 'east' | 'west';
 }
 
-/** Agent towers: tower (7 wide) with its annex 9 units west of it. */
-export function layoutTowers(count: number): Array<{ origin: { x: number; z: number }; lot: Lot }> {
+/** Model towers stand west of the annex, one every MODEL_SPACING. */
+export const MODEL_SPACING = 6.5;
+export const FIRST_MODEL_X = TOWER_X - 17;
+
+/**
+ * Agent complexes: headquarters tower (7 wide), its annex 9 units west of it, then one tower per
+ * model. `modelCounts[i]` is how many model towers complex i has; the lot grows to fit them.
+ */
+export function layoutTowers(modelCounts: number[]): Array<{ origin: { x: number; z: number }; lot: Lot }> {
   const half = 3.5 + LOT_MARGIN;
-  return Array.from({ length: count }, (_, i) => {
+  return modelCounts.map((models, i) => {
     const maxZ = LOT_FRONT_Z - i * (2 * half + LOT_GAP);
     const z = maxZ - half;
+    const westEdge = models > 0 ? FIRST_MODEL_X - (models - 1) * MODEL_SPACING - 2.5 : TOWER_X - 9 - 3;
     return {
       origin: { x: TOWER_X, z },
-      lot: { minX: TOWER_X - 9 - 3 - LOT_MARGIN, maxX: TOWER_X + half, minZ: z - half, maxZ, gate: 'east' },
+      lot: { minX: westEdge - LOT_MARGIN, maxX: TOWER_X + half, minZ: z - half, maxZ, gate: 'east' },
     };
   });
 }

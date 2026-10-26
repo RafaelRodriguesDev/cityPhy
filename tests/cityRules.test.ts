@@ -13,7 +13,7 @@ const inside = (v: number, [a, b]: [number, number]) => v > a && v < b;
 const overlaps = (lo: number, hi: number, [a, b]: [number, number]) => lo < b && hi > a;
 
 const lots = (): Lot[] => [
-  ...layoutTowers(3).map((s) => s.lot),
+  ...layoutTowers([0, 2, 5]).map((s) => s.lot),
   ...layoutProjects([33, 6, 60, 15], 6).map((s) => s.lot),
 ];
 

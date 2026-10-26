@@ -9,9 +9,11 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   process.env.CITYPHY_CONFIG ??= resolve(process.cwd(), 'cityphy.config.json');
   if (env.CITYPHY_DATA) process.env.CITYPHY_DATA = env.CITYPHY_DATA;
-  const dataDir = mode === 'example' ? resolve(process.cwd(), 'examples', 'data') : loadConfig().dataDir;
+  const example = mode === 'example';
+  const config = example ? null : loadConfig();
+  const dataDir = config ? config.dataDir : resolve(process.cwd(), 'examples', 'data');
   return {
-    plugins: [dataPlugin(dataDir)],
+    plugins: [dataPlugin(dataDir, config)],
     server: { host: '127.0.0.1', port: 5190, strictPort: true },
   };
 });

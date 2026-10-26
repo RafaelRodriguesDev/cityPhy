@@ -16,6 +16,8 @@ export interface CityphyConfig {
   projects: ProjectConfig[];
   /** Full path to graphify when it is not on PATH (GRAPHIFY_BIN overrides it). */
   graphifyBin?: string;
+  /** Relative cost of each model in your plan (1 = 1x, 2 = 2x, 0 = free). Models left out show "não informado". */
+  models?: Record<string, { multiplier?: number }>;
 }
 
 /** cityPhy's own folder (two levels above this file), where cityphy.config.json lives. */
@@ -32,5 +34,5 @@ export function loadConfig(): CityphyConfig {
   const raw: Partial<CityphyConfig> = existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : {};
   const dataDir = resolve(base, process.env.CITYPHY_DATA ?? raw.dataDir ?? './data');
   const projects = (raw.projects ?? []).map((p) => ({ ...p, path: resolve(base, p.path) }));
-  return { dataDir, projects, graphifyBin: raw.graphifyBin };
+  return { dataDir, projects, graphifyBin: raw.graphifyBin, models: raw.models ?? {} };
 }

@@ -80,3 +80,8 @@ dd { margin: 0; }
 .pill { padding: 2px 8px; border-radius: 6px; background: rgba(255, 255, 255, 0.05); color: var(--muted); font-size: 12px; }
 .pill.on { background: rgba(43, 179, 154, 0.18); color: #7de8cf; }
 code { font-family: ui-monospace, Consolas, monospace; font-size: 11px; }
+.grid { width: 100%; border-collapse: collapse; font-size: 12px; margin: 4px 0; }
+.grid th, .grid td { text-align: left; padding: 4px 4px; border-bottom: 1px solid var(--line); }
+.grid th { color: var(--muted); font-weight: 600; }
+button.pill { border: 0; cursor: pointer; font: inherit; }
+.calc[hidden] { display: none; }
