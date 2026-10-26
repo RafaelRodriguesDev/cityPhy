@@ -5,6 +5,15 @@ All notable changes to cityPhy. Format based on [Keep a Changelog](https://keepa
 ## [Unreleased]
 
 ### Added
+- **Model towers**: one tower per model next to each agent, one band per reasoning level; panel with summary, levels,
+  a calculator by number of calls (fresh vs cached tokens, × relative cost) and a comparison between models.
+- **Consumption tower**: glass blocks for the week and the day (or the tool's 5-hour window) that fill up to 100%, using
+  the tool's real plan percent when it records one, else the limits in the local config.
+- **Usage and consumption readers** for Claude Code, Codex and Antigravity (model, reasoning level, tokens per call;
+  Codex plan windows).
+- **Tabbed left panel**: a general tab plus one tab per tool found.
+- **Global agent rules**: `cityphy setup` installs a global `cityphy` skill per agent and Claude Code hooks in the global
+  settings; nothing is written inside projects anymore (older project blocks/hooks can be removed by setup).
 - **Local memory per project** (idea of claude-mem, kept on disk): Claude Code hooks turn session events into
   observations in a per-project SQLite file (`node:sqlite`, full-text search), summarized by rules into `LESSONS.md`
   and brought back at session start within a token budget. `cityphy mem search | save | stats | lessons`.

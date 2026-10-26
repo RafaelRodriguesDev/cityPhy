@@ -38,6 +38,9 @@ O cityPhy ataca o que **entra** na conversa:
 | **Torre da IA** (a oeste da rua principal) | uma por IA. **Térreo** = o que ela carrega em *toda* sessão (regras, instruções, índice da memória, lista de skills). Depois memórias, skills e as sessões recentes; as antigas vão para o **anexo**. Altura do andar = peso do conteúdo (≈ tokens). |
 | **Condomínio** (a leste da rua) | um lote cercado por projeto, um prédio por pasta de topo, do tamanho do número de arquivos. Cada projeto tem **a sua cor**. |
 | **Rede elétrica** | quando uma IA trabalha num projeto, um cabo sai da torre, segue pelos **postes de luz** da calçada, atravessa a rua pelo ar e entra pela **portaria** do projeto; de lá corre pelo chão até cada prédio. Pulsos de luz correm nele na cor do projeto. Nada fica em cima da rua. |
+| **Torres por modelo** | ao lado de cada IA, uma torre por modelo usado (ex.: dois modelos do Claude, três níveis do mesmo GPT). Cada **faixa** é um nível de raciocínio (low, medium, high...), do tamanho dos tokens gastos. O painel tem **Resumo**, **Níveis**, **Calculadora** (digite quantas chamadas a tarefa terá e veja o custo em cada nível: tokens novos × cache) e **Comparar** (os modelos da IA lado a lado). |
+| **Torre de consumo** | dois blocos de **vidro** que enchem até 100%: **semana** e **dia** (ou a janela de 5 horas, quando a ferramenta informa). Usa o **percentual real do plano** quando a ferramenta registra (ex.: Codex); senão, o limite que você definir no config; sem limite, mostra só os tokens. |
+| **Painel com abas** | à esquerda, **Geral** e uma aba por ferramenta encontrada (nova ferramenta = nova aba, sozinha). Nos condomínios: Resumo, Economia, Memória e Opções. |
 | **Portaria (painel)** | passe o mouse para ver o peso; clique para abrir o painel. |
 
 <table>
@@ -121,7 +124,10 @@ npm run dev                  # http://127.0.0.1:5190
     torre-claude/          torre do Claude
     torre-codex/
   ```
-- `exclude` vai para o `graphify extract --exclude`. Se o `graphify` não estiver no `PATH`, defina `GRAPHIFY_BIN`.
+- `exclude` vai para o `graphify extract --exclude`. Se o `graphify` não estiver no `PATH`, defina `GRAPHIFY_BIN` ou `graphifyBin`.
+- Opcional, só no seu config local: `"models": { "<modelo>": { "multiplier": 2 } }` (custo relativo 1x/2x/0x do seu plano) e `"tools": { "claude": { "dailyLimit": 2000000, "weeklyLimit": 10000000 } }` (o 100% da torre de consumo, em tokens novos).
+
+**Leitores de uso hoje:** Claude Code (modelo e tokens por chamada), Codex (modelo, nível de raciocínio, tokens e o % real do plano) e Antigravity (modelo, nível e tokens). Cada ferramenta acrescenta o seu em `src/metrics/usage/` e `src/metrics/consumption/`.
 
 ## O que o `setup` pergunta (por projeto)
 
@@ -177,9 +183,10 @@ Notas para IAs: [AGENTS.md](AGENTS.md) · Mudanças: [CHANGELOG.md](CHANGELOG.md
 
 ## Próximos passos
 
-- Painéis com abas: economia por IA e por modelo, memória, opções ligadas, trabalho recente
+- Várias contas por ferramenta (uma torre de consumo por conta + total)
+- "Medir demanda": qual modelo e nível servem para uma tarefa (previsão pelo histórico e teste real opcional)
 - Pulsos ao vivo quando uma IA consulta o grafo ou salva uma memória
-- Leitores de uso do Codex e do Antigravity (o do Claude está pronto) e o cartório com a memória de cada projeto
+- O cartório com a memória de cada projeto
 - `npx cityphy`
 
 ## Créditos

@@ -38,6 +38,9 @@ cityPhy attacks what goes *into* the conversation:
 | **Agent tower** (west of the main street) | one per AI agent. **Ground floor** = what the agent loads in *every* session (rules, instruction files, memory index, skills listing). Then memories, skills and the latest sessions. Older sessions move to an **annex**. Floor height = content weight (≈ tokens). |
 | **Condominium** (east of the street) | one fenced lot per project, one building per top folder, sized by file count. Each project has **its own color**. |
 | **Power line** | when an agent works on a project, a cable leaves its tower, runs along the **street-lamp posts**, crosses the street through the air and enters the project's **gatehouse**, then runs on the ground to every building. Light pulses travel along it in the project's color. Nothing ever stands on a street. |
+| **Model towers** | next to each agent, one tower per model used (e.g. two Claude models, three levels of the same GPT). Each **band** is a reasoning level (low, medium, high...), sized by the tokens spent. The panel has **Summary**, **Levels**, **Calculator** (type how many calls a task will take and see the cost at each level: fresh × cached tokens) and **Compare** (the agent's models side by side). |
+| **Consumption tower** | two **glass** blocks that fill up to 100%: **week** and **day** (or the 5-hour window, when the tool reports it). Uses the tool's **real plan percent** when it records one (e.g. Codex); otherwise the limit you set in the config; with no limit, just the tokens. |
+| **Tabbed panels** | on the left, **General** plus one tab per tool found (a new tool gets its own tab). In condominiums: Summary, Savings, Memory and Options. |
 | **Gatehouse panel** | hover anything for its weight; click to open its panel. |
 
 <table>
@@ -122,7 +125,10 @@ npm run dev                  # http://127.0.0.1:5190
     torre-claude/          Claude's tower ("torre" = tower)
     torre-codex/
   ```
-- `exclude` is passed to `graphify extract --exclude`. If `graphify` is not on your `PATH`, set `GRAPHIFY_BIN`.
+- `exclude` is passed to `graphify extract --exclude`. If `graphify` is not on your `PATH`, set `GRAPHIFY_BIN` or `graphifyBin`.
+- Optional, only in your local config: `"models": { "<model>": { "multiplier": 2 } }` (relative cost 1x/2x/0x in your plan) and `"tools": { "claude": { "dailyLimit": 2000000, "weeklyLimit": 10000000 } }` (the 100% of the consumption tower, in fresh tokens).
+
+**Usage readers today:** Claude Code (model and tokens per call), Codex (model, reasoning level, tokens and the real plan percent) and Antigravity (model, level and tokens). Each tool adds its own in `src/metrics/usage/` and `src/metrics/consumption/`.
 
 ## What `setup` asks (per project)
 
@@ -178,9 +184,10 @@ Notes for AI agents: [AGENTS.md](AGENTS.md) · Changes: [CHANGELOG.md](CHANGELOG
 
 ## Roadmap
 
-- Tabbed panels: savings per agent and model, memory, enabled options, recent work
+- Several accounts per tool (one consumption tower per account + total)
+- "Measure a task": which model and level fit a task (forecast from history, optional real test)
 - Live pulses when an agent queries the graph or a memory is saved
-- Usage readers for Codex and Antigravity (Claude's is done) and the notary building ("cartório") for each project's memory
+- The notary building ("cartório") for each project's memory
 - `npx cityphy`
 
 ## Credits
