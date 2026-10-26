@@ -15,6 +15,8 @@ export interface ModelBreakdown extends ModelUsage {
   sessions: number;
   /** Total tokens of each session that used this model/level (for size percentiles). */
   sessionTotals: number[];
+  /** Calls of each session that used this model/level (same order as sessionTotals). */
+  sessionCalls: number[];
 }
 
 /** Where the context that tools brought in came from. */
@@ -42,7 +44,7 @@ export function addCall(
   u: { input: number; cacheWrite: number; cacheRead: number; output: number; reasoning: number },
 ): ModelBreakdown {
   const key = `${model}\u0000${effort}`;
-  const row = rows.get(key) ?? { model, effort, calls: 0, input: 0, cacheWrite: 0, cacheRead: 0, output: 0, reasoning: 0, sessions: 0, sessionTotals: [] };
+  const row = rows.get(key) ?? { model, effort, calls: 0, input: 0, cacheWrite: 0, cacheRead: 0, output: 0, reasoning: 0, sessions: 0, sessionTotals: [], sessionCalls: [] };
   rows.set(key, row);
   row.calls++;
   row.input += u.input;
@@ -54,8 +56,10 @@ export function addCall(
     sessionSeen.add(`${key}\u0000${session}`);
     row.sessions++;
     row.sessionTotals.push(0);
+    row.sessionCalls.push(0);
   }
   row.sessionTotals[row.sessionTotals.length - 1] += u.input + u.cacheWrite + u.cacheRead + u.output;
+  row.sessionCalls[row.sessionCalls.length - 1]++;
   return row;
 }
 
@@ -66,9 +70,10 @@ export function mergeBreakdowns(lists: ModelBreakdown[][]): ModelBreakdown[] {
     const key = `${r.model}\u0000${r.effort}`;
     const t = out.get(key);
     if (!t) {
-      out.set(key, { ...r, sessionTotals: [...r.sessionTotals] });
+      out.set(key, { ...r, sessionTotals: [...r.sessionTotals], sessionCalls: [...(r.sessionCalls ?? [])] });
       continue;
     }
+    t.sessionCalls.push(...(r.sessionCalls ?? []));
     t.calls += r.calls;
     t.input += r.input;
     t.cacheWrite += r.cacheWrite;

@@ -67,26 +67,46 @@ function percentile(values: number[], p: number): number | null {
   return s[Math.min(s.length - 1, Math.floor(p * (s.length - 1) + 0.5))];
 }
 
+/** Shortcut sizes in number of calls: quartiles of this model's real sessions (25/50/75). */
+export function callPresets(rows: ModelBreakdown[]): Record<TaskSize, number> {
+  const calls = rows.flatMap((r) => r.sessionCalls ?? []).filter((c) => c > 0);
+  const pick = (s: TaskSize, fallback: number) => Math.max(1, percentile(calls, PERCENTILE[s]) ?? fallback);
+  return { pequena: pick('pequena', 10), média: pick('média', 40), grande: pick('grande', 120) };
+}
+
 export interface Estimate {
   effort: string;
-  tokens: number | null; // ≈ tokens for a task of that size at that level (from this machine's history)
-  weighted: number | null; // tokens × multiplier
-  ratio: number | null; // vs the reference level
-  samples: number; // sessions behind the estimate
+  /** ≈ tokens charged in full for N calls: uncached input + cache writes + output. */
+  fresh: number;
+  /** ≈ tokens read from the prompt cache for N calls (much cheaper). */
+  cached: number;
+  /** Part of `fresh` that is reasoning output. */
+  reasoning: number;
+  weighted: number | null; // fresh × multiplier
+  ratio: number | null; // fresh vs the reference level
+  calls: number; // real calls behind the averages
 }
 
 /**
- * "How much would a task of this size cost at each level?", from the sessions already recorded for
- * this model. Sizes are percentiles of real sessions; a level with no sessions has no estimate.
+ * "How much would a task of N calls cost at each level?": the average per call of every level this
+ * model was used at here, times N. Levels never used have no row.
  */
-export function estimateByEffort(rows: ModelBreakdown[], size: TaskSize, multiplier: number | null): Estimate[] {
-  const list = rows.map((r) => ({ effort: r.effort, tokens: percentile(r.sessionTotals, PERCENTILE[size]), samples: r.sessionTotals.length }));
-  const ref = list.find((e) => e.effort === 'medium') ?? [...list].sort((a, b) => b.samples - a.samples)[0];
+export function estimateForCalls(rows: ModelBreakdown[], n: number, multiplier: number | null): Estimate[] {
+  const list = rows
+    .filter((r) => r.calls > 0)
+    .map((r) => ({
+      effort: r.effort,
+      fresh: Math.round(((r.input + r.cacheWrite + r.output) / r.calls) * n),
+      cached: Math.round((r.cacheRead / r.calls) * n),
+      reasoning: Math.round((r.reasoning / r.calls) * n),
+      calls: r.calls,
+    }));
+  const ref = list.find((e) => e.effort === 'medium') ?? [...list].sort((a, b) => b.calls - a.calls)[0];
   return list
     .sort((a, b) => effortRank(a.effort) - effortRank(b.effort))
     .map((e) => ({
       ...e,
-      weighted: e.tokens !== null && multiplier !== null ? Math.round(e.tokens * multiplier) : null,
-      ratio: e.tokens !== null && ref?.tokens ? e.tokens / ref.tokens : null,
+      weighted: multiplier !== null ? Math.round(e.fresh * multiplier) : null,
+      ratio: ref?.fresh ? e.fresh / ref.fresh : null,
     }));
 }

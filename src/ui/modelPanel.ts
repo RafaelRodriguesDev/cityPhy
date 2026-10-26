@@ -1,4 +1,4 @@
-import { estimateByEffort, groupByModel, statOf, type Multipliers, type TaskSize } from '../metrics/modelStats.ts';
+import { callPresets, estimateForCalls, groupByModel, statOf, type Multipliers } from '../metrics/modelStats.ts';
 import type { ModelBreakdown } from '../metrics/usage/types.ts';
 import type { ModelBand } from '../scene/modelTowers.ts';
 import { escapeHtml } from './format.ts';
@@ -11,7 +11,7 @@ const mult = (m: number | null) => (m === null ? 'não informado' : `${m}x`);
 function summaryTab(rows: ModelBreakdown[], model: string, multipliers: Multipliers, projects: string[]): string {
   const all = rows.reduce(
     (t, r) => ({ ...t, calls: t.calls + r.calls, sessions: t.sessions + r.sessions, input: t.input + r.input, cacheWrite: t.cacheWrite + r.cacheWrite, cacheRead: t.cacheRead + r.cacheRead, output: t.output + r.output, reasoning: t.reasoning + r.reasoning }),
-    { model, effort: 'todos', calls: 0, sessions: 0, input: 0, cacheWrite: 0, cacheRead: 0, output: 0, reasoning: 0, sessionTotals: [] as number[] },
+    { model, effort: 'todos', calls: 0, sessions: 0, input: 0, cacheWrite: 0, cacheRead: 0, output: 0, reasoning: 0, sessionTotals: [] as number[], sessionCalls: [] as number[] },
   );
   const s = statOf(all, multipliers);
   return `
@@ -35,22 +35,29 @@ function levelsTab(rows: ModelBreakdown[], multipliers: Multipliers): string {
     <p class="muted">Médias desta máquina. Nível sem linha = nunca usado.</p>`;
 }
 
-function calculatorTab(rows: ModelBreakdown[], multiplier: number | null): string {
-  const sizes: TaskSize[] = ['pequena', 'média', 'grande'];
-  const tables = sizes
-    .map((size) => {
-      const est = estimateByEffort(rows, size, multiplier);
-      const body = est
-        .map((e) => `<tr><td>${escapeHtml(e.effort)}</td><td>${e.tokens === null ? 'sem dados' : `≈ ${n(e.tokens)}`}</td><td>${e.ratio === null ? '—' : `${e.ratio.toFixed(1)}×`}</td><td>${e.weighted === null ? '—' : `≈ ${n(e.weighted)}`}</td><td>${e.samples}</td></tr>`)
-        .join('');
-      return `<div class="calc" data-size="${size}"${size === 'média' ? '' : ' hidden'}><table class="grid"><thead><tr><th>Nível</th><th>Tokens</th><th>vs ref.</th><th>× custo</th><th>Sessões</th></tr></thead><tbody>${body}</tbody></table></div>`;
-    })
+/** Table of the calculator for N calls (re-rendered while the person types). */
+function calculatorTable(rows: ModelBreakdown[], calls: number, multiplier: number | null): string {
+  const est = estimateForCalls(rows, calls, multiplier);
+  const body = est
+    .map(
+      (e) => `<tr><td>${escapeHtml(e.effort)}</td><td>≈ ${n(e.fresh)}</td><td>≈ ${n(e.cached)}</td><td>${e.ratio === null ? '—' : `${e.ratio.toFixed(1)}×`}</td><td>${e.weighted === null ? '—' : `≈ ${n(e.weighted)}`}</td></tr>`,
+    )
     .join('');
+  const single = est.length === 1
+    ? `<p class="note">Só há dados do nível <strong>${escapeHtml(est[0].effort)}</strong> neste modelo, então não dá para comparar níveis ainda. Use outro nível em uma tarefa (ou o teste real, quando existir) e a comparação aparece aqui.</p>`
+    : '';
+  return `<table class="grid"><thead><tr><th>Nível</th><th>Tokens novos</th><th>Do cache</th><th>vs ref.</th><th>× custo</th></tr></thead><tbody>${body}</tbody></table>${single}`;
+}
+
+function calculatorTab(rows: ModelBreakdown[], multiplier: number | null): string {
+  const presets = callPresets(rows);
   return `
-    <p class="muted">Quanto custaria uma tarefa em cada nível, pelo que este modelo já gastou aqui.</p>
-    <div class="pills">${sizes.map((s) => `<button class="pill size${s === 'média' ? ' on' : ''}" data-size="${s}">tarefa ${s}</button>`).join('')}</div>
-    ${tables}
-    <p class="muted">Pequena/média/grande = sessões reais no quartil 25/50/75. "vs ref." compara com o nível medium (ou o mais usado).</p>`;
+    <p class="muted">Quanto custaria uma tarefa em cada nível, pela média por chamada deste modelo aqui.</p>
+    <label class="calc-input">Chamadas na tarefa <input type="number" min="1" step="1" value="${presets['média']}" class="calls"></label>
+    <div class="pills">${(['pequena', 'média', 'grande'] as const).map((s) => `<button class="pill preset${s === 'média' ? ' on' : ''}" data-calls="${presets[s]}">${s} (${n(presets[s])})</button>`).join('')}</div>
+    <div class="calc-result">${calculatorTable(rows, presets['média'], multiplier)}</div>
+    <p class="muted">Tokens novos = entrada sem cache + escrita no cache + saída (o que pesa no custo). Do cache = reaproveitado, bem mais barato.
+    Atalhos = suas sessões reais (25/50/75%). "vs ref." compara com o nível medium (ou o mais usado). × custo usa o multiplicador do cityphy.config.json.</p>`;
 }
 
 function compareTab(agentRows: ModelBreakdown[], multipliers: Multipliers): string {
@@ -77,10 +84,19 @@ export function showModel(panel: HTMLElement, band: ModelBand, agentName: string
     { label: 'Calculadora', html: calculatorTab(band.allRows, multipliers[band.model]?.multiplier ?? null) },
     { label: 'Comparar', html: compareTab(agentRows, multipliers) },
   ]);
-  panel.querySelectorAll<HTMLButtonElement>('.size').forEach((b) =>
+  const multiplier = multipliers[band.model]?.multiplier ?? null;
+  const input = panel.querySelector<HTMLInputElement>('input.calls')!;
+  const result = panel.querySelector<HTMLElement>('.calc-result')!;
+  const update = () => {
+    const calls = Math.max(1, Math.round(Number(input.value) || 1));
+    result.innerHTML = calculatorTable(band.allRows, calls, multiplier);
+    panel.querySelectorAll<HTMLButtonElement>('.preset').forEach((b) => b.classList.toggle('on', Number(b.dataset.calls) === calls));
+  };
+  input.addEventListener('input', update);
+  panel.querySelectorAll<HTMLButtonElement>('.preset').forEach((b) =>
     b.addEventListener('click', () => {
-      panel.querySelectorAll('.size').forEach((x) => x.classList.toggle('on', x === b));
-      panel.querySelectorAll<HTMLElement>('.calc').forEach((c) => (c.hidden = c.dataset.size !== b.dataset.size));
+      input.value = b.dataset.calls!;
+      update();
     }),
   );
   panel.hidden = false;

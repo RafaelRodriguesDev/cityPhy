@@ -8,6 +8,7 @@ import { DEFAULT_OPTIONS } from '../src/memory/schema.ts';
 import { MemoryStore } from '../src/memory/store.ts';
 import { buildLessons } from '../src/memory/summarize.ts';
 import { sourceFilesOf } from '../src/metrics/queryLog.ts';
+import { estimateForCalls } from '../src/metrics/modelStats.ts';
 
 const project = { name: 'shop', path: '/code/shop' };
 const tmp = mkdtempSync(join(tmpdir(), 'cityphy-'));
@@ -51,6 +52,18 @@ describe('session context', () => {
     expect(lessons.length / 4).toBeLessThanOrEqual(300);
     const text = sessionContext('shop', { ...DEFAULT_OPTIONS, graph: true, memory: true, inject: true, injectBudget: 300 }, lessons);
     expect(text.length / 4).toBeLessThanOrEqual(301);
+  });
+});
+
+describe('model calculator', () => {
+  const row = (effort: string, calls: number, input: number, cacheRead: number, output: number) => ({
+    model: 'm', effort, calls, input, cacheWrite: 0, cacheRead, output, reasoning: 0, sessions: 1, sessionTotals: [input + cacheRead + output], sessionCalls: [calls],
+  });
+  it('scales the per-call average to N calls and compares with medium', () => {
+    const est = estimateForCalls([row('high', 10, 3000, 1000, 1000), row('medium', 10, 1000, 1000, 1000)], 5, 2);
+    expect(est.map((e) => e.effort)).toEqual(['medium', 'high']);
+    expect(est[0]).toMatchObject({ fresh: 1000, cached: 500, ratio: 1, weighted: 2000 });
+    expect(est[1].ratio).toBe(2);
   });
 });
 
