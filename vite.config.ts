@@ -13,7 +13,7 @@ export default defineConfig(({ mode }) => {
   const config = example ? null : loadConfig();
   const dataDir = config ? config.dataDir : resolve(process.cwd(), 'examples', 'data');
   return {
-    plugins: [dataPlugin(dataDir, config)],
+    plugins: [dataPlugin(dataDir, example ? null : loadConfig)],
     server: { host: '127.0.0.1', port: 5190, strictPort: true },
   };
 });

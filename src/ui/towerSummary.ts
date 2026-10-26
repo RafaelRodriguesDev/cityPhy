@@ -50,7 +50,12 @@ function toolTab(t: ToolSummary, projects: ProjectLegend[]): string {
 }
 
 /** Top-left panel: a "Geral" tab plus one tab per tool found (new tools get a tab by themselves). */
-export function renderSummary(el: HTMLElement, tools: ToolSummary[], projects: ProjectLegend[], onPulses: (on: boolean) => void): void {
+export function renderSummary(
+  el: HTMLElement,
+  tools: ToolSummary[],
+  projects: ProjectLegend[],
+  on: { onPulses(on: boolean): void; onShowInactive(on: boolean): void },
+): void {
   const legend = SECTIONS.map((s) => `<li><span class="swatch" style="background:${hex(SECTION_COLOR[s])}"></span>${escapeHtml(SECTION_NAMES[s])}</li>`).join('');
   const projectList = projects
     .map((p) => `<li><span class="swatch" style="background:${hex(p.color)}"></span>${escapeHtml(p.name)} <span class="muted-inline">${p.agents.length ? `← ${p.agents.map(escapeHtml).join(', ')}` : 'sem energia'}</span></li>`)
@@ -58,7 +63,9 @@ export function renderSummary(el: HTMLElement, tools: ToolSummary[], projects: P
   const totalWeek = tools.reduce((s, t) => s + (t.consumption?.week.fresh ?? 0), 0);
 
   el.innerHTML = `<h1>cityPhy</h1><div class="tabs-host"></div>
-    <label class="toggle"><input type="checkbox" checked> pulsos de luz</label>`;
+    <label class="toggle"><input type="checkbox" class="opt-pulses" checked> pulsos de luz</label>
+    <label class="toggle"><input type="checkbox" class="opt-inactive" checked> mostrar cabos inativos</label>
+    <p class="muted">Cabo aceso = a IA está trabalhando no projeto agora; apagado = já trabalhou.</p>`;
   renderTabs(el.querySelector('.tabs-host')!, [
     {
       label: 'Geral',
@@ -69,5 +76,6 @@ export function renderSummary(el: HTMLElement, tools: ToolSummary[], projects: P
     },
     ...tools.map((t) => ({ label: escapeHtml(t.name), html: toolTab(t, projects) })),
   ]);
-  el.querySelector('input')!.addEventListener('change', (e) => onPulses((e.target as HTMLInputElement).checked));
+  el.querySelector('.opt-pulses')!.addEventListener('change', (e) => on.onPulses((e.target as HTMLInputElement).checked));
+  el.querySelector('.opt-inactive')!.addEventListener('change', (e) => on.onShowInactive((e.target as HTMLInputElement).checked));
 }

@@ -9,6 +9,7 @@ import { MemoryStore } from '../src/memory/store.ts';
 import { buildLessons } from '../src/memory/summarize.ts';
 import { sourceFilesOf } from '../src/metrics/queryLog.ts';
 import { estimateForCalls } from '../src/metrics/modelStats.ts';
+import { ago, isActive } from '../src/metrics/activity/types.ts';
 
 const project = { name: 'shop', path: '/code/shop' };
 const tmp = mkdtempSync(join(tmpdir(), 'cityphy-'));
@@ -64,6 +65,20 @@ describe('model calculator', () => {
     expect(est.map((e) => e.effort)).toEqual(['medium', 'high']);
     expect(est[0]).toMatchObject({ fresh: 1000, cached: 500, ratio: 1, weighted: 2000 });
     expect(est[1].ratio).toBe(2);
+  });
+});
+
+describe('activity', () => {
+  const now = '2026-10-26T12:00:00Z';
+  it('lights a power line only inside the window', () => {
+    expect(isActive('2026-10-26T11:50:00Z', 15, now)).toBe(true);
+    expect(isActive('2026-10-26T11:40:00Z', 15, now)).toBe(false);
+    expect(isActive(null, 15, now)).toBe(false);
+  });
+  it('says how long ago in plain words', () => {
+    expect(ago('2026-10-26T11:59:40Z', now)).toBe('agora');
+    expect(ago('2026-10-26T11:48:00Z', now)).toBe('há 12 min');
+    expect(ago('2026-10-23T12:00:00Z', now)).toBe('há 3 dias');
   });
 });
 

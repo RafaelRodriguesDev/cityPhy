@@ -127,14 +127,14 @@
         "minutes": 300,
         "usedPercent": 38,
         "resetsAt": null,
-        "seenAt": "2026-10-26T13:59:57.854Z"
+        "seenAt": "2026-10-26T17:34:15.849Z"
       },
       {
         "label": "semana",
         "minutes": 10080,
         "usedPercent": 61,
         "resetsAt": null,
-        "seenAt": "2026-10-26T13:59:57.854Z"
+        "seenAt": "2026-10-26T17:34:15.849Z"
       }
     ],
     "limits": {

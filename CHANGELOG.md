@@ -5,6 +5,9 @@ All notable changes to cityPhy. Format based on [Keep a Changelog](https://keepa
 ## [Unreleased]
 
 ### Added
+- **Live power lines**: a cable is lit only while the agent is working on the project (log writes within
+  `activeWindowMinutes`, default 15), dark otherwise; the page polls `/api/activity` every 30 s, inactive cables can be
+  hidden and the project panel shows when each agent last worked there.
 - **Project groups** for monorepos (`group` in the config): one graph and condominium per system, while sessions,
   memory, hooks and power lines of the root belong to the group. `refresh --project <name>` and `maxGraphBytes`.
 - **Model towers**: one tower per model next to each agent, one band per reasoning level; panel with summary, levels,

@@ -41,6 +41,7 @@ cityPhy attacks what goes *into* the conversation:
 | **Model towers** | next to each agent, one tower per model used (e.g. two Claude models, three levels of the same GPT). Each **band** is a reasoning level (low, medium, high...), sized by the tokens spent. The panel has **Summary**, **Levels**, **Calculator** (type how many calls a task will take and see the cost at each level: fresh × cached tokens) and **Compare** (the agent's models side by side). |
 | **Consumption tower** | two **glass** blocks that fill up to 100%: **week** and **day** (or the 5-hour window, when the tool reports it). Uses the tool's **real plan percent** when it records one (e.g. Codex); otherwise the limit you set in the config; with no limit, just the tokens. |
 | **Tabbed panels** | on the left, **General** plus one tab per tool found (a new tool gets its own tab). In condominiums: Summary, Savings, Memory and Options. |
+| **Live power** | a cable is **lit, with pulses**, only while the agent is working on the project (it wrote to its logs in the last 15 minutes; set `activeWindowMinutes`). Otherwise it stays **dark**: it only shows the agent worked there before. The page refreshes every 30 s; inactive cables can be hidden. |
 | **Gatehouse panel** | hover anything for its weight; click to open its panel. |
 
 <table>

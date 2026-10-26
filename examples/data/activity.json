@@ -1,0 +1,13 @@
+{
+  "claude": {
+    "shop-api": 2,
+    "web-store": 600
+  },
+  "codex": {
+    "web-store": 5,
+    "mobile-app": 3000
+  },
+  "antigravity": {
+    "shop-api": 240
+  }
+}

@@ -41,6 +41,7 @@ O cityPhy ataca o que **entra** na conversa:
 | **Torres por modelo** | ao lado de cada IA, uma torre por modelo usado (ex.: dois modelos do Claude, três níveis do mesmo GPT). Cada **faixa** é um nível de raciocínio (low, medium, high...), do tamanho dos tokens gastos. O painel tem **Resumo**, **Níveis**, **Calculadora** (digite quantas chamadas a tarefa terá e veja o custo em cada nível: tokens novos × cache) e **Comparar** (os modelos da IA lado a lado). |
 | **Torre de consumo** | dois blocos de **vidro** que enchem até 100%: **semana** e **dia** (ou a janela de 5 horas, quando a ferramenta informa). Usa o **percentual real do plano** quando a ferramenta registra (ex.: Codex); senão, o limite que você definir no config; sem limite, mostra só os tokens. |
 | **Painel com abas** | à esquerda, **Geral** e uma aba por ferramenta encontrada (nova ferramenta = nova aba, sozinha). Nos condomínios: Resumo, Economia, Memória e Opções. |
+| **Energia ao vivo** | o cabo fica **aceso, com pulsos**, só enquanto a IA está trabalhando no projeto (gravou nos registros dela nos últimos 15 minutos; ajuste com `activeWindowMinutes`). Fora disso ele fica **apagado**: só mostra que ela já trabalhou ali. A página se atualiza a cada 30 s; dá para esconder os cabos inativos. |
 | **Portaria (painel)** | passe o mouse para ver o peso; clique para abrir o painel. |
 
 <table>

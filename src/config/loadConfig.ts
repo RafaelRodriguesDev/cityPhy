@@ -27,6 +27,8 @@ export interface CityphyConfig {
   tools?: Record<string, { dailyLimit?: number; weeklyLimit?: number }>;
   /** Raise graphify's graph size cap (bytes) only when you mean it; default keeps graphify's own limit. */
   maxGraphBytes?: number;
+  /** A power line is lit when the tool wrote to its logs in the project within this many minutes (default 15). */
+  activeWindowMinutes?: number;
 }
 
 /** cityPhy's own folder (two levels above this file), where cityphy.config.json lives. */
@@ -47,5 +49,5 @@ export function loadConfig(): CityphyConfig {
     path: resolve(base, p.path),
     ...(p.group ? { group: { name: p.group.name, path: resolve(base, p.group.path) } } : {}),
   }));
-  return { dataDir, projects, graphifyBin: raw.graphifyBin, models: raw.models ?? {}, tools: raw.tools ?? {}, maxGraphBytes: raw.maxGraphBytes };
+  return { dataDir, projects, graphifyBin: raw.graphifyBin, models: raw.models ?? {}, tools: raw.tools ?? {}, maxGraphBytes: raw.maxGraphBytes, activeWindowMinutes: raw.activeWindowMinutes };
 }

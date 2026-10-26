@@ -1,5 +1,6 @@
 import './style.css';
-import { Vector3, type InstancedMesh } from 'three';
+import { Color, Vector3, type InstancedMesh, type Mesh, type MeshBasicMaterial } from 'three';
+import { ago, isActive, type ActivityReport } from './metrics/activity/types.ts';
 import type { ProjectSummary } from './readers/projects.ts';
 import type { TowerGraph } from './towers/schema.ts';
 import { createStage } from './scene/stage.ts';
@@ -34,6 +35,8 @@ const isFloor = (it: Item): it is PlacedFloor => 'node' in it;
 const isModel = (it: Item): it is ModelBand => 'kind' in it && it.kind === 'model';
 const isConsumption = (it: Item): it is ConsumptionBlock => 'kind' in it && it.kind === 'consumption';
 const AGENT_NAMES: Record<string, string> = { claude: 'Claude', codex: 'Codex', antigravity: 'Antigravity' };
+const INACTIVE_CABLE = new Color(0x56606f);
+const ACTIVITY_POLL_MS = 30_000;
 const samePath = (a: string, b: string) => a.replace(/[\\/]+/g, '/').toLowerCase() === b.replace(/[\\/]+/g, '/').toLowerCase();
 
 async function main() {
@@ -77,7 +80,10 @@ async function main() {
     stage.scene.add(p.object);
     stage.addAnimator(p.animator);
     pulseSets.push(p);
+    return p;
   };
+  /** What the panel toggles change: pulses on/off and whether dark (inactive) cables are drawn. */
+  const view = { pulses: true, showInactive: true };
 
   // Project condominiums across the street, each with its own color (members of a group share theirs).
   const groupOf = (p: ProjectSummary) => (p as ProjectSummary & { group?: { name: string; path: string } }).group;
@@ -91,6 +97,17 @@ async function main() {
     meshes.push(block.mesh);
     return { project, color, block, fence, slot: i, agents: [] as string[] };
   });
+  type Condo = (typeof condos)[number];
+
+  // One power line per (tool, project) that ever worked together; lit or dark depending on activity.
+  const powerLines: Array<{ agent: string; name: string; condo: Condo; mesh: Mesh; pulses: ReturnType<typeof buildPulses>; last: string | null }> = [];
+  const addPowerLine = (agent: string, name: string, condo: Condo, from: Vector3, slot: number) => {
+    const line = buildCable(routePowerLine(from, condo.fence.entry, posts, slot), condo.color);
+    stage.scene.add(line.object);
+    const pulses = addPulses([0, 1, 2].map(() => ({ curve: line.curve, color: condo.color })), 1.4);
+    powerLines.push({ agent, name, condo, mesh: line.object, pulses, last: null });
+    condo.agents.push(name);
+  };
 
   // Agent towers, their inner cables, and a power line to each project they work on.
   towers.forEach((graph, i) => {
@@ -108,10 +125,7 @@ async function main() {
     for (const condo of condos) {
       const groupRoot = groupOf(condo.project)?.path;
       if (!worksOn.some((p) => samePath(p, condo.project.root) || (groupRoot && samePath(p, groupRoot)))) continue;
-      const line = buildCable(routePowerLine(tower.powerAnchor, condo.fence.entry, posts, condo.slot), condo.color);
-      stage.scene.add(line.object);
-      addPulses([0, 1, 2].map(() => ({ curve: line.curve, color: condo.color })), 1.4);
-      condo.agents.push(graph.graph.cityphy.agentName);
+      addPowerLine(graph.graph.cityphy.agent, graph.graph.cityphy.agentName, condo, tower.powerAnchor, condo.slot);
     }
   });
 
@@ -140,20 +154,55 @@ async function main() {
     for (const condo of condos) {
       const worked = usage.agents[agent]?.projects;
       if (!worked?.[condo.project.name] && !worked?.[groupOf(condo.project)?.name ?? '']) continue;
-      const line = buildCable(routePowerLine(anchor, condo.fence.entry, posts, condo.slot + agents.length), condo.color);
-      stage.scene.add(line.object);
-      addPulses([0, 1, 2].map(() => ({ curve: line.curve, color: condo.color })), 1.4);
-      condo.agents.push(nameOf(agent));
+      addPowerLine(agent, nameOf(agent), condo, anchor, condo.slot + agents.length);
     }
   });
 
   // Inside each powered condominium, power runs from the gatehouse to every building.
-  for (const condo of condos) {
-    if (!condo.agents.length) continue;
-    const wiring = buildLotWiring(condo.fence.house, condo.block.doors, condo.color);
-    stage.scene.add(wiring.group);
-    addPulses(wiring.curves.map((curve) => ({ curve, color: condo.color })), 0.9);
-  }
+  const lotWirings = condos
+    .filter((condo) => condo.agents.length)
+    .map((condo) => {
+      const wiring = buildLotWiring(condo.fence.house, condo.block.doors, condo.color);
+      stage.scene.add(wiring.group);
+      return { condo, group: wiring.group, pulses: addPulses(wiring.curves.map((curve) => ({ curve, color: condo.color })), 0.9) };
+    });
+
+  // Power is lit only while a tool is working in the project (recent writes to its logs); otherwise the cable stays, dark.
+  let lastActivity: ActivityReport | null = null;
+  const applyActivity = (report: ActivityReport) => {
+    lastActivity = report;
+    const litCondos = new Set<Condo>();
+    for (const l of powerLines) {
+      const per = report.agents[l.agent] ?? {};
+      l.last = per[l.condo.project.name] ?? per[groupOf(l.condo.project)?.name ?? ''] ?? null;
+      const on = isActive(l.last, report.windowMinutes, report.generatedAt);
+      if (on) litCondos.add(l.condo);
+      const mat = l.mesh.material as MeshBasicMaterial;
+      mat.color.copy(on ? l.condo.color : INACTIVE_CABLE);
+      mat.opacity = on ? 0.85 : 0.28;
+      l.mesh.visible = on || view.showInactive;
+      l.pulses.setRunning(on && view.pulses);
+    }
+    for (const w of lotWirings) {
+      const on = litCondos.has(w.condo);
+      w.group.traverse((o) => {
+        const m = (o as { material?: MeshBasicMaterial }).material;
+        if (m?.color) {
+          m.color.copy(on ? w.condo.color : INACTIVE_CABLE);
+          m.opacity = on ? 0.8 : 0.25;
+        }
+      });
+      w.pulses.setRunning(on && view.pulses);
+    }
+    stage.requestRender();
+  };
+  const refreshActivity = () =>
+    fetch('/api/activity')
+      .then((r) => r.json())
+      .then((a: ActivityReport) => applyActivity(a))
+      .catch(() => undefined);
+  await refreshActivity();
+  setInterval(refreshActivity, ACTIVITY_POLL_MS);
 
   const legend: ProjectLegend[] = condos.map((c) => ({ name: c.project.name, color: c.color.getHex(), agents: c.agents }));
   const tools: ToolSummary[] = agents.map((a) => ({
@@ -163,9 +212,17 @@ async function main() {
     consumption: consumptionOf(a),
     models: rowsOf(a),
   }));
-  renderSummary(document.getElementById('summary')!, tools, legend, (on) => {
-    for (const p of pulseSets) p.setRunning(on);
-    stage.requestRender();
+  renderSummary(document.getElementById('summary')!, tools, legend, {
+    onPulses(on) {
+      view.pulses = on;
+      for (const p of pulseSets) p.setRunning(on);
+      if (lastActivity) applyActivity(lastActivity); // power lines only pulse while active
+      stage.requestRender();
+    },
+    onShowInactive(on) {
+      view.showInactive = on;
+      if (lastActivity) applyActivity(lastActivity);
+    },
   });
 
   setupPicking<Item>(stage, meshes, items, {
@@ -188,7 +245,15 @@ async function main() {
       if (isFloor(it)) showFloor(panel, it, graphOf.get(it.agent)!);
       else if (isConsumption(it)) showConsumption(panel, it, nameOf(it.agent));
       else if (isModel(it)) showModel(panel, it, nameOf(it.agent), rowsOf(it.agent), usage.multipliers, Object.keys(usage.agents[it.agent]?.projects ?? {}));
-      else showProjectBuilding(panel, it, condos.find((c) => c.project === it.project)?.agents ?? []);
+      else {
+        // "Energia de": each tool that ever worked here, with when it last did.
+        const now = lastActivity?.generatedAt ?? new Date().toISOString();
+        const win = lastActivity?.windowMinutes ?? 15;
+        const feeds = powerLines
+          .filter((l) => l.condo.project === it.project)
+          .map((l) => `${l.name} · ${isActive(l.last, win, now) ? 'ativo agora' : ago(l.last, now)}`);
+        showProjectBuilding(panel, it, feeds);
+      }
     },
   });
   stage.requestRender();

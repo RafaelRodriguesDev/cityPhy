@@ -146,6 +146,10 @@ function writeUsage(): void {
     },
   };
   writeFileSync(join(OUT, 'usage.json'), JSON.stringify(usage, null, 2));
+
+  // Minutes since each tool last worked in each project: some lines lit (< 15 min), some dark.
+  const activity = { claude: { 'shop-api': 2, 'web-store': 600 }, codex: { 'web-store': 5, 'mobile-app': 3000 }, antigravity: { 'shop-api': 240 } };
+  writeFileSync(join(OUT, 'activity.json'), JSON.stringify(activity, null, 2));
 }
 
 PROJECTS.forEach(writeProject);
