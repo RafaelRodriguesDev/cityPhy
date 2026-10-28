@@ -15,6 +15,8 @@ export interface PlanWindow {
   usedPercent: number;
   resetsAt: string | null; // ISO
   seenAt: string; // when the tool reported it
+  /** Set when the percent is cityPhy's estimate from a calibration, not reported by the tool. */
+  calibrated?: { limit: number; used: number; fromApp: number; fromBlocks: number };
 }
 
 export interface ToolConsumption {
@@ -25,6 +27,8 @@ export interface ToolConsumption {
   windows: PlanWindow[]; // empty when the tool does not report its plan usage
   /** Limits the person set in cityphy.config.json → tools (fresh tokens). Null = not set. */
   limits: { daily: number | null; weekly: number | null };
+  /** Claude only: what the person typed from the app (see calibration.ts). */
+  calibration?: { samples: Array<{ kind: 'session' | 'week'; percent: number; resetsAt: string; at: string; tokens: number }> };
 }
 
 export const DAYS = 7;

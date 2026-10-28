@@ -5,6 +5,11 @@ All notable changes to cityPhy. Format based on [Keep a Changelog](https://keepa
 ## [Unreleased]
 
 ### Added
+- **Claude plan limits by calibration**: Claude Code does not store its plan percent, so the Claude panel has a form
+  to type what the app shows (session and week percent, and when each resets). Each reading becomes a sample of the
+  limit (tokens seen in that window ÷ percent), together with every rate-limit block recorded in the logs (100% at that
+  moment); the limit is the median. 5-hour windows are chained from the calls, the week repeats from its reset. The
+  glasses show it as an estimate. Readings are kept in `calibration.json` in cityPhy's data folder.
 - **Maquete as the main page**: a light, model-like city (flat colors, outlines, sun shadows, orthographic view) with
   towers that have window rows and setbacks, measuring-glass consumption, a library building with columns and a
   pediment, lattice radio masts with animated waves for MCP servers, and condominiums with houses and blocks. The first

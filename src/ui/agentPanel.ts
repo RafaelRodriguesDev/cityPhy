@@ -34,7 +34,7 @@ export function showAgent(panel: HTMLElement, a: AgentView, lib: Library, now: s
   const divergent = skills.filter((s) => s.divergent);
   if (divergent.length) checks.push({ level: 'warn', text: `${n(divergent.length)} skill(s) com versão diferente das outras IAs.` });
   for (const w of c?.windows ?? [])
-    if (w.usedPercent >= 85) checks.push({ level: 'warn', text: `Janela de ${escapeHtml(w.label)} em ${w.usedPercent}% do plano.` });
+    if (w.usedPercent >= 85) checks.push({ level: 'warn', text: `Janela de ${escapeHtml(w.label)} em ${w.calibrated ? '≈ ' : ''}${Math.round(w.usedPercent)}% do plano${w.calibrated ? ' (estimado)' : ''}.` });
   if (skills.length > 150) checks.push({ level: 'warn', text: `${n(skills.length)} skills na lista de toda sessão: uma lista longa pesa no contexto.` });
   if (mcpsOf(lib, a.agent).some((m) => m.transport === 'remote')) checks.push({ level: 'info', text: 'Tem servidor MCP remoto.' });
 

@@ -9,7 +9,7 @@ export async function readConsumption(config: CityphyConfig): Promise<ToolConsum
   const out: ToolConsumption[] = [];
   for (const [agent, read] of Object.entries(CONSUMPTION_READERS)) {
     const l = config.tools?.[agent] ?? {};
-    const c = await read({ daily: l.dailyLimit ?? null, weekly: l.weeklyLimit ?? null });
+    const c = await read({ daily: l.dailyLimit ?? null, weekly: l.weeklyLimit ?? null }, config.dataDir);
     if (c.week.calls > 0 || c.windows.length) out.push(c);
   }
   return out;

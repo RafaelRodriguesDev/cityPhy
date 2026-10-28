@@ -21,6 +21,7 @@ import { maqueteLayout } from './layout.ts';
 import { buildStreets } from './streets.ts';
 import { buildAgentTower } from './agentTower.ts';
 import { buildGlass } from './glass.ts';
+import { appendCalibration } from './calibrationView.ts';
 import { buildLibraryHall } from './libraryHall.ts';
 import { buildRadioMast } from './radioMast.ts';
 import { buildCondo, CONDO_WIDTH } from './condo.ts';
@@ -66,6 +67,7 @@ async function main() {
   stage.setExtent(L.minZ, L.maxZ);
 
   // Agents: tower + glasses, a sign above.
+  const glasses = new Map<string, THREE.Group>();
   const anchors = new Map<string, THREE.Vector3>();
   agents.forEach((a, i) => {
     const at = L.agents[i];
@@ -73,7 +75,11 @@ async function main() {
     stage.scene.add(t.group);
     anchors.set(a, t.anchor);
     const c = consumptionOf(a);
-    if (c) stage.scene.add(buildGlass(c, a, { x: at.x - 12, z: at.z + 4 }));
+    if (c) {
+      const g = buildGlass(c, a, { x: at.x - 12, z: at.z + 4 });
+      glasses.set(a, g);
+      stage.scene.add(g);
+    }
     const s = sign(nameOf(a), 3.6, c ? `semana ${short(c.week.fresh)}` : undefined);
     s.position.set(at.x, t.top + 2.5, at.z);
     stage.scene.add(s);
@@ -150,7 +156,11 @@ async function main() {
       });
 
   const openAgent = (a: string, move = true) => {
-    ui.open = () => showAgent(panel, viewOf(a), library, now());
+    ui.open = () => {
+      showAgent(panel, viewOf(a), library, now());
+      const c = consumptionOf(a);
+      if (a === 'claude' && c) appendCalibration(panel, c, refreshConsumption);
+    };
     ui.open();
     const at = L.agents[agents.indexOf(a)];
     if (move) fly(at.x - 4, at.z, 46);
@@ -250,6 +260,25 @@ async function main() {
     ui.open();
     if (move) fly(L.radio.x, L.radio.z, 56);
   };
+  /** After a calibration: new consumption numbers, new glasses, same panel. */
+  async function refreshConsumption() {
+    const fresh = (await get('/api/consumption')) as ToolConsumption[];
+    consumption.splice(0, consumption.length, ...fresh);
+    for (const [a, old] of glasses) {
+      const c = consumptionOf(a);
+      const at = L.agents[agents.indexOf(a)];
+      if (!c || !at) continue;
+      stage.scene.remove(old);
+      const g = buildGlass(c, a, { x: at.x - 12, z: at.z + 4 });
+      glasses.set(a, g);
+      stage.scene.add(g);
+    }
+    refreshTargets();
+    renderPanels();
+    ui.open?.();
+    stage.requestRender();
+  }
+
   /** Behind each condominium: the MCP servers that project used (masts, or a radio central above the limit). */
   const usedKey = (p: Project) => (p.group?.name && work[p.group.name] ? p.group.name : p.name);
   function buildStations() {

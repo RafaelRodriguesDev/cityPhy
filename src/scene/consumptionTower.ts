@@ -13,8 +13,11 @@ export interface BlockValue {
   label: string; // "semana", "dia", "5 horas"
   fill: number | null; // 0..1, null = no 100% known
   text: string; // what the label on top says
-  /** plano: the tool's real plan percent · limite: the config's limit · histórico: against the busiest day of the last 7. */
-  source: 'plano' | 'limite' | 'histórico' | 'sem limite';
+  /**
+   * plano: the tool's real plan percent · calibrado: cityPhy's estimate from the person's readings of the app and the
+   * blocks in the logs · limite: the config's limit · histórico: against the busiest day of the last 7.
+   */
+  source: 'plano' | 'calibrado' | 'limite' | 'histórico' | 'sem limite';
 }
 
 export const fmtTokens = (n: number) => (n >= 1e6 ? `${(n / 1e6).toFixed(1).replace('.', ',')} mi` : n >= 1e3 ? `${Math.round(n / 1e3)} mil` : String(n));
@@ -30,7 +33,8 @@ const current = <W extends { resetsAt: string | null }>(w: W | undefined, now: n
 export function blockValues(c: ToolConsumption, now = Date.now()): BlockValue[] {
   const win = (minutes: number) => current(c.windows.find((w) => w.minutes === minutes), now);
   const peak = Math.max(0, ...c.days.map((d) => d.fresh));
-  const make = (key: BlockValue['key'], label: string, used: number, limit: number | null, history: number, window?: { usedPercent: number }): BlockValue => {
+  const make = (key: BlockValue['key'], label: string, used: number, limit: number | null, history: number, window?: { usedPercent: number; calibrated?: unknown }): BlockValue => {
+    if (window?.calibrated) return { key, label, fill: Math.min(1, window.usedPercent / 100), text: `${label} ≈ ${Math.round(window.usedPercent)}% do plano (estimado)`, source: 'calibrado' };
     if (window) return { key, label, fill: Math.min(1, window.usedPercent / 100), text: `${label} ${Math.round(window.usedPercent)}% do plano`, source: 'plano' };
     const fill = fillOf(used, limit);
     if (fill !== null) return { key, label, fill, text: `${label} ${Math.round(fill * 100)}% · ${fmtTokens(used)}`, source: 'limite' };

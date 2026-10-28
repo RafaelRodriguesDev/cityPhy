@@ -7,6 +7,7 @@ import { escapeHtml, formatDate } from './format.ts';
 const n = (v: number) => v.toLocaleString('pt-BR');
 export const SOURCE_TEXT = {
   plano: 'percentual real do plano, informado pela ferramenta',
+  calibrado: 'estimado: limite calibrado pelo % que você leu no app e pelos bloqueios registrados',
   limite: 'seu limite no cityphy.config.json',
   histórico: 'comparado ao dia mais pesado dos últimos 7 (semana: 7 dias desse pico)',
   'sem limite': 'nenhum uso nos últimos 7 dias',
@@ -29,12 +30,12 @@ export function showConsumption(panel: HTMLElement, b: ConsumptionBlock, toolNam
     .join('');
 
   const checks: Check[] = [];
-  for (const v of values) if (v.source !== 'histórico' && (v.fill ?? 0) >= 0.85) checks.push({ level: 'warn', text: `${escapeHtml(v.label)} em ${Math.round(v.fill! * 100)}% do ${v.source === 'plano' ? 'plano' : 'seu limite'}.` });
+  for (const v of values) if (v.source !== 'histórico' && (v.fill ?? 0) >= 0.85) checks.push({ level: 'warn', text: `${escapeHtml(v.label)} em ${Math.round(v.fill! * 100)}% do ${v.source === 'plano' || v.source === 'calibrado' ? 'plano' : 'seu limite'}.` });
   if (values.every((v) => v.source === 'histórico' || v.source === 'sem limite'))
     checks.push({ level: 'info', text: `Sem 100% real: defina <code>"tools": { "${escapeHtml(c.agent)}": { "weeklyLimit": … } }</code> no config para medir contra o seu plano.` });
   const stale = c.windows.filter((w) => w.resetsAt && Date.parse(w.resetsAt) < Date.now());
   if (stale.length) checks.push({ level: 'info', text: `Janela ${stale.map((w) => escapeHtml(w.label)).join(', ')} já reiniciou; a ferramenta ainda não informou a nova.` });
-  for (const w of c.windows) checks.push({ level: 'info', text: `Plano · ${escapeHtml(w.label)}: ${w.usedPercent}% (reinicia ${formatDate(w.resetsAt)}).` });
+  for (const w of c.windows) checks.push({ level: 'info', text: `Plano · ${escapeHtml(w.label)}: ${w.calibrated ? '≈ ' : ''}${Math.round(w.usedPercent)}%${w.calibrated ? ' (estimado)' : ''} (reinicia ${formatDate(w.resetsAt)}).` });
 
   showPiece(panel, {
     kicker: `${toolName} · torre de consumo (todas as pastas)`,

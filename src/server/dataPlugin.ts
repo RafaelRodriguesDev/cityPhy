@@ -10,6 +10,7 @@ import { readActivity, readExampleActivity } from '../readers/activity.ts';
 import { readExampleLibrary, readLibrary } from '../readers/library.ts';
 import { readControl, readExampleControl } from '../readers/control.ts';
 import { readExampleWork, readWork } from '../readers/work.ts';
+import { saveCalibration } from './calibrate.ts';
 
 function sendJson(res: ServerResponse, data: unknown): void {
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
@@ -76,6 +77,33 @@ export function dataPlugin(dataDir: string, getConfig: (() => CityphyConfig) | n
         readWork(getConfig())
           .then((w) => sendJson(res, w))
           .catch(() => sendJson(res, {}));
+      });
+      // The only write: what the person typed from the Claude app, kept in cityPhy's own data folder.
+      server.middlewares.use('/api/calibrate', (req, res) => {
+        if (req.method !== 'POST') return sendJson(res, { error: 'use POST' });
+        if (!getConfig) {
+          res.statusCode = 400;
+          return sendJson(res, { error: 'O exemplo fictício não guarda calibração.' });
+        }
+        let body = '';
+        req.on('data', (c) => (body += c));
+        req.on('end', () => {
+          let input: { kind?: unknown; percent?: unknown; resetsAt?: unknown; clear?: unknown };
+          try {
+            input = JSON.parse(body || '{}');
+          } catch {
+            input = {};
+          }
+          saveCalibration(getConfig().dataDir, input)
+            .then((r) => {
+              if ('error' in r) res.statusCode = 400;
+              sendJson(res, r);
+            })
+            .catch(() => {
+              res.statusCode = 500;
+              sendJson(res, { error: 'Não consegui salvar a calibração.' });
+            });
+        });
       });
       server.middlewares.use('/api/usage', (_req, res) => {
         if (!getConfig) return sendJson(res, readExampleUsage(dataDir));

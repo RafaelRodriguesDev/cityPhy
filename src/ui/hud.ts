@@ -12,7 +12,7 @@ export function alertsOf(agents: AgentView[], lib: Library): string[] {
   const out: string[] = [];
   const divergent = lib.skills.filter((s) => s.divergent).length;
   if (divergent) out.push(`${divergent} skill(s) com cópias diferentes`);
-  for (const a of agents) for (const w of a.consumption?.windows ?? []) if (w.usedPercent >= 85) out.push(`${a.name}: ${w.label} em ${w.usedPercent}%`);
+  for (const a of agents) for (const w of a.consumption?.windows ?? []) if (w.usedPercent >= 85) out.push(`${a.name}: ${w.label} em ${w.calibrated ? '≈ ' : ''}${Math.round(w.usedPercent)}%`);
   const remote = lib.mcps.filter((m) => m.transport === 'remote').length;
   if (remote) out.push(`${remote} MCP remoto(s)`);
   return out;

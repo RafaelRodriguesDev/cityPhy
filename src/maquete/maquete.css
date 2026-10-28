@@ -176,3 +176,15 @@ code { font-family: ui-monospace, Consolas, monospace; font-size: 11px; }
 .sname .st { align-self: flex-start; margin: 1px 0; }
 .eco h3:has(.dot)::before { display: none; }
 .foot { margin: 8px 2px 0; font-size: 11px; } .foot a { color: var(--muted); }
+
+.calib-form { display: grid; gap: 8px; margin-top: 8px; }
+.calib-form label { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 12px; }
+.calib-form input, .calib-form select {
+  font: inherit; font-size: 12px; border: 1px solid var(--line); border-radius: 6px; padding: 3px 6px; background: #fff; color: var(--text);
+}
+.calib-form input[type='number'] { width: 56px; }
+.calib-actions { display: flex; align-items: center; gap: 10px; }
+.calib-actions button { background: var(--accent); color: #fff; border: 0; border-radius: 6px; padding: 5px 12px; cursor: pointer; }
+.calib-msg { font-size: 12px; color: var(--muted); }
+.calib details { margin-top: 8px; font-size: 12px; }
+.calib summary { cursor: pointer; color: var(--muted); }
