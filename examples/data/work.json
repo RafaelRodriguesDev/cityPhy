@@ -1,0 +1,377 @@
+{
+  "shop-api": [
+    {
+      "agent": "claude",
+      "toolsRecorded": true,
+      "sessions": [
+        {
+          "agent": "claude",
+          "session": "claude-0",
+          "title": "Checkout com cupom",
+          "startedAt": "2026-10-21T09:00:00.000Z",
+          "lastAt": "2026-10-21T09:00:00.000Z",
+          "turns": 149,
+          "skills": {
+            "graphify": 3,
+            "run-tests": 1
+          },
+          "mcp": {}
+        },
+        {
+          "agent": "claude",
+          "session": "claude-1",
+          "title": "Login social",
+          "startedAt": "2026-10-22T09:00:00.000Z",
+          "lastAt": "2026-10-22T09:00:00.000Z",
+          "turns": 53,
+          "skills": {
+            "graphify": 2,
+            "run-tests": 1
+          },
+          "mcp": {
+            "db-inspector": {
+              "query": 21,
+              "schema": 1
+            }
+          }
+        },
+        {
+          "agent": "claude",
+          "session": "claude-2",
+          "title": "Relatório de vendas",
+          "startedAt": "2026-10-23T09:00:00.000Z",
+          "lastAt": "2026-10-23T09:00:00.000Z",
+          "turns": 163,
+          "skills": {
+            "graphify": 2
+          },
+          "mcp": {}
+        },
+        {
+          "agent": "claude",
+          "session": "claude-3",
+          "title": "Cache de produtos",
+          "startedAt": "2026-10-24T09:00:00.000Z",
+          "lastAt": "2026-10-24T09:00:00.000Z",
+          "turns": 58,
+          "skills": {
+            "graphify": 3
+          },
+          "mcp": {
+            "db-inspector": {
+              "query": 14,
+              "schema": 1
+            },
+            "browser": {
+              "navigate": 31,
+              "screenshot": 3
+            }
+          }
+        }
+      ]
+    },
+    {
+      "agent": "antigravity",
+      "toolsRecorded": false,
+      "sessions": [
+        {
+          "agent": "antigravity",
+          "session": "antigravity-0",
+          "title": "Checkout com cupom",
+          "startedAt": "2026-10-21T09:00:00.000Z",
+          "lastAt": "2026-10-21T09:00:00.000Z",
+          "turns": 48,
+          "skills": {},
+          "mcp": {}
+        },
+        {
+          "agent": "antigravity",
+          "session": "antigravity-1",
+          "title": "Login social",
+          "startedAt": "2026-10-22T09:00:00.000Z",
+          "lastAt": "2026-10-22T09:00:00.000Z",
+          "turns": 72,
+          "skills": {},
+          "mcp": {}
+        },
+        {
+          "agent": "antigravity",
+          "session": "antigravity-2",
+          "title": "Relatório de vendas",
+          "startedAt": "2026-10-23T09:00:00.000Z",
+          "lastAt": "2026-10-23T09:00:00.000Z",
+          "turns": 190,
+          "skills": {},
+          "mcp": {}
+        },
+        {
+          "agent": "antigravity",
+          "session": "antigravity-3",
+          "title": "Cache de produtos",
+          "startedAt": "2026-10-24T09:00:00.000Z",
+          "lastAt": "2026-10-24T09:00:00.000Z",
+          "turns": 164,
+          "skills": {},
+          "mcp": {}
+        },
+        {
+          "agent": "antigravity",
+          "session": "antigravity-4",
+          "title": "Tela de perfil",
+          "startedAt": "2026-10-25T09:00:00.000Z",
+          "lastAt": "2026-10-25T09:00:00.000Z",
+          "turns": 171,
+          "skills": {},
+          "mcp": {}
+        },
+        {
+          "agent": "antigravity",
+          "session": "antigravity-5",
+          "title": "Migração do banco",
+          "startedAt": "2026-10-26T09:00:00.000Z",
+          "lastAt": "2026-10-26T09:00:00.000Z",
+          "turns": 207,
+          "skills": {},
+          "mcp": {}
+        },
+        {
+          "agent": "antigravity",
+          "session": "antigravity-6",
+          "title": "Testes de carga",
+          "startedAt": "2026-10-27T09:00:00.000Z",
+          "lastAt": "2026-10-27T09:00:00.000Z",
+          "turns": 20,
+          "skills": {},
+          "mcp": {}
+        }
+      ]
+    }
+  ],
+  "web-store": [
+    {
+      "agent": "claude",
+      "toolsRecorded": true,
+      "sessions": [
+        {
+          "agent": "claude",
+          "session": "claude-0",
+          "title": "Checkout com cupom",
+          "startedAt": "2026-10-21T09:00:00.000Z",
+          "lastAt": "2026-10-21T09:00:00.000Z",
+          "turns": 157,
+          "skills": {
+            "run-tests": 1
+          },
+          "mcp": {}
+        },
+        {
+          "agent": "claude",
+          "session": "claude-1",
+          "title": "Login social",
+          "startedAt": "2026-10-22T09:00:00.000Z",
+          "lastAt": "2026-10-22T09:00:00.000Z",
+          "turns": 32,
+          "skills": {
+            "graphify": 1
+          },
+          "mcp": {
+            "browser": {
+              "navigate": 8,
+              "screenshot": 3
+            }
+          }
+        },
+        {
+          "agent": "claude",
+          "session": "claude-2",
+          "title": "Relatório de vendas",
+          "startedAt": "2026-10-23T09:00:00.000Z",
+          "lastAt": "2026-10-23T09:00:00.000Z",
+          "turns": 94,
+          "skills": {
+            "graphify": 1
+          },
+          "mcp": {
+            "db-inspector": {
+              "query": 16,
+              "schema": 1
+            }
+          }
+        },
+        {
+          "agent": "claude",
+          "session": "claude-3",
+          "title": "Cache de produtos",
+          "startedAt": "2026-10-24T09:00:00.000Z",
+          "lastAt": "2026-10-24T09:00:00.000Z",
+          "turns": 99,
+          "skills": {},
+          "mcp": {
+            "db-inspector": {
+              "query": 11,
+              "schema": 1
+            },
+            "browser": {
+              "navigate": 11,
+              "screenshot": 3
+            }
+          }
+        }
+      ]
+    },
+    {
+      "agent": "codex",
+      "toolsRecorded": false,
+      "sessions": [
+        {
+          "agent": "codex",
+          "session": "codex-0",
+          "title": "Checkout com cupom",
+          "startedAt": "2026-10-21T09:00:00.000Z",
+          "lastAt": "2026-10-21T09:00:00.000Z",
+          "turns": 107,
+          "skills": {},
+          "mcp": {}
+        },
+        {
+          "agent": "codex",
+          "session": "codex-1",
+          "title": "Login social",
+          "startedAt": "2026-10-22T09:00:00.000Z",
+          "lastAt": "2026-10-22T09:00:00.000Z",
+          "turns": 49,
+          "skills": {},
+          "mcp": {}
+        },
+        {
+          "agent": "codex",
+          "session": "codex-2",
+          "title": "Relatório de vendas",
+          "startedAt": "2026-10-23T09:00:00.000Z",
+          "lastAt": "2026-10-23T09:00:00.000Z",
+          "turns": 172,
+          "skills": {},
+          "mcp": {}
+        },
+        {
+          "agent": "codex",
+          "session": "codex-3",
+          "title": "Cache de produtos",
+          "startedAt": "2026-10-24T09:00:00.000Z",
+          "lastAt": "2026-10-24T09:00:00.000Z",
+          "turns": 93,
+          "skills": {},
+          "mcp": {}
+        },
+        {
+          "agent": "codex",
+          "session": "codex-4",
+          "title": "Tela de perfil",
+          "startedAt": "2026-10-25T09:00:00.000Z",
+          "lastAt": "2026-10-25T09:00:00.000Z",
+          "turns": 111,
+          "skills": {},
+          "mcp": {}
+        },
+        {
+          "agent": "codex",
+          "session": "codex-5",
+          "title": "Migração do banco",
+          "startedAt": "2026-10-26T09:00:00.000Z",
+          "lastAt": "2026-10-26T09:00:00.000Z",
+          "turns": 116,
+          "skills": {},
+          "mcp": {}
+        }
+      ]
+    }
+  ],
+  "mobile-app": [
+    {
+      "agent": "codex",
+      "toolsRecorded": false,
+      "sessions": [
+        {
+          "agent": "codex",
+          "session": "codex-0",
+          "title": "Checkout com cupom",
+          "startedAt": "2026-10-21T09:00:00.000Z",
+          "lastAt": "2026-10-21T09:00:00.000Z",
+          "turns": 81,
+          "skills": {},
+          "mcp": {}
+        },
+        {
+          "agent": "codex",
+          "session": "codex-1",
+          "title": "Login social",
+          "startedAt": "2026-10-22T09:00:00.000Z",
+          "lastAt": "2026-10-22T09:00:00.000Z",
+          "turns": 189,
+          "skills": {},
+          "mcp": {}
+        },
+        {
+          "agent": "codex",
+          "session": "codex-2",
+          "title": "Relatório de vendas",
+          "startedAt": "2026-10-23T09:00:00.000Z",
+          "lastAt": "2026-10-23T09:00:00.000Z",
+          "turns": 64,
+          "skills": {},
+          "mcp": {}
+        },
+        {
+          "agent": "codex",
+          "session": "codex-3",
+          "title": "Cache de produtos",
+          "startedAt": "2026-10-24T09:00:00.000Z",
+          "lastAt": "2026-10-24T09:00:00.000Z",
+          "turns": 16,
+          "skills": {},
+          "mcp": {}
+        },
+        {
+          "agent": "codex",
+          "session": "codex-4",
+          "title": "Tela de perfil",
+          "startedAt": "2026-10-25T09:00:00.000Z",
+          "lastAt": "2026-10-25T09:00:00.000Z",
+          "turns": 66,
+          "skills": {},
+          "mcp": {}
+        },
+        {
+          "agent": "codex",
+          "session": "codex-5",
+          "title": "Migração do banco",
+          "startedAt": "2026-10-26T09:00:00.000Z",
+          "lastAt": "2026-10-26T09:00:00.000Z",
+          "turns": 62,
+          "skills": {},
+          "mcp": {}
+        },
+        {
+          "agent": "codex",
+          "session": "codex-6",
+          "title": "Testes de carga",
+          "startedAt": "2026-10-27T09:00:00.000Z",
+          "lastAt": "2026-10-27T09:00:00.000Z",
+          "turns": 38,
+          "skills": {},
+          "mcp": {}
+        },
+        {
+          "agent": "codex",
+          "session": "codex-7",
+          "title": "Deploy em staging",
+          "startedAt": "2026-10-28T09:00:00.000Z",
+          "lastAt": "2026-10-28T09:00:00.000Z",
+          "turns": 203,
+          "skills": {},
+          "mcp": {}
+        }
+      ]
+    }
+  ]
+}

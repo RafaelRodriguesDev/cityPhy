@@ -10,3 +10,6 @@ cityphy.config.json
 
 # diário de desenvolvimento: só local
 docs/DIARY.md
+
+# ferramentas locais do editor/agente (servidor de preview etc.)
+.claude/

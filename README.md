@@ -10,7 +10,7 @@ contexto. Feita sobre o [graphify](https://github.com/safishamsi/graphify). Tudo
 **Português** · [English](README.en.md) · [Como funciona](#como-funciona) · [Instalação](#instalação) · [Comandos](#comandos) ·
 [Créditos](CREDITS.md)
 
-![A cidade de exemplo: torres das IAs à esquerda, condomínios dos projetos à direita, energia pelos postes de luz](docs/images/city-overview.jpg)
+![A cidade de exemplo: maquete com as torres das IAs, os condomínios com as antenas atrás, a biblioteca e o rádio](docs/images/city-overview.jpg)
 
 <sub>Print do exemplo **fictício** que vem no repositório (`npm run dev:example`): três projetos e três IAs.</sub>
 
@@ -33,24 +33,30 @@ O cityPhy ataca o que **entra** na conversa:
 
 ## O que você vê
 
+Uma **maquete**: cores chapadas, contorno fino, sombra do sol, vista de cima. Passe o mouse para ver o peso; clique numa
+peça para a câmera ir até ela e abrir o painel. Todo painel tem os mesmos quatro blocos: **Contexto** (o que é pago em
+toda sessão), **Entrada** (o que é buscado quando precisa), **Saída** (o que foi produzido ou gasto) e
+**Esperado × real** (o que olhar).
+
 | Peça | Significado |
 |---|---|
-| **Torre da IA** (a oeste da rua principal) | uma por IA. **Térreo** = o que ela carrega em *toda* sessão (regras, instruções, índice da memória, lista de skills). Depois memórias, skills e as sessões recentes; as antigas vão para o **anexo**. Altura do andar = peso do conteúdo (≈ tokens). |
-| **Condomínio** (a leste da rua) | um lote cercado por projeto, um prédio por pasta de topo, do tamanho do número de arquivos. Cada projeto tem **a sua cor**. |
-| **Rede elétrica** | quando uma IA trabalha num projeto, um cabo sai da torre, segue pelos **postes de luz** da calçada, atravessa a rua pelo ar e entra pela **portaria** do projeto; de lá corre pelo chão até cada prédio. Pulsos de luz correm nele na cor do projeto. Nada fica em cima da rua. |
-| **Torres por modelo** | ao lado de cada IA, uma torre por modelo usado (ex.: dois modelos do Claude, três níveis do mesmo GPT). Cada **faixa** é um nível de raciocínio (low, medium, high...), do tamanho dos tokens gastos. O painel tem **Resumo**, **Níveis**, **Calculadora** (digite quantas chamadas a tarefa terá e veja o custo em cada nível: tokens novos × cache) e **Comparar** (os modelos da IA lado a lado). |
-| **Torre de consumo** | dois blocos de **vidro** que enchem até 100%: **semana** e **dia** (ou a janela de 5 horas, quando a ferramenta informa). Usa o **percentual real do plano** quando a ferramenta registra (ex.: Codex); senão, o limite que você definir no config; sem limite, mostra só os tokens. |
-| **Painel com abas** | à esquerda, **Geral** e uma aba por ferramenta encontrada (nova ferramenta = nova aba, sozinha). Nos condomínios: Resumo, Economia, Memória e Opções. |
-| **Energia ao vivo** | o cabo fica **aceso, com pulsos**, só enquanto a IA está trabalhando no projeto (gravou nos registros dela nos últimos 15 minutos; ajuste com `activeWindowMinutes`). Fora disso ele fica **apagado**: só mostra que ela já trabalhou ali. A página se atualiza a cada 30 s; dá para esconder os cabos inativos. |
-| **Portaria (painel)** | passe o mouse para ver o peso; clique para abrir o painel. |
+| **Barra do topo** | cinco números: contexto fixo por sessão, consumo da semana, IAs trabalhando agora, **economia do cityPhy** (tokens que o grafo evitou e quantas sessões passaram pelo controle) e itens para olhar. |
+| **Torre da IA** (a oeste da rua) | um andar por seção, com janelas e recuos. **Térreo** = o que a IA carrega em *toda* sessão (regras, instruções, índice da memória, lista de skills); depois memória, skills e sessões. Altura = peso (≈ tokens). |
+| **Vidros de consumo** | dois copos medidores ao lado da torre, **semana** e **dia**. Enchem pelo percentual real do plano quando a ferramenta registra (ex.: Codex), pelo limite do config ou, sem limite, em relação ao dia mais pesado dos últimos 7. |
+| **Condomínio** (a leste) | um lote murado por projeto, com portaria; um prédio por pasta de topo (casas com telhado quando pequenas, blocos quando grandes). Cada projeto tem **a sua cor**. |
+| **Antenas do projeto** | atrás de cada condomínio, uma torre de rádio por **servidor MCP que o projeto usou** nas conversas, mais alta com mais chamadas; cinza quando o servidor vem do próprio aplicativo da IA. Uma linha tracejada liga a antena ao mesmo servidor no centro cívico quando ele está configurado. Acima de 6 servidores vira uma **central de rádio**: um prédio com antenas no telhado e o total na placa. |
+| **Centro cívico** | a **biblioteca** (um prédio com colunas; a faixa sob o telhado mostra de onde vieram as skills) e o **rádio**, com uma torre treliçada por servidor MCP **instalado**: o catálogo do que as IAs podem usar. |
+| **Rede elétrica** | um cabo sai da torre da IA, segue pelos **postes de luz**, atravessa a rua pelo ar e entra pela portaria. Fica **aceso, com um pulso**, só enquanto a IA trabalha no projeto (gravou nos registros nos últimos 15 minutos; ajuste com `activeWindowMinutes`). |
+| **Barra lateral** | abas **IAs**, **Projetos** (paginados) e **Cívico**. |
+| **Painel do projeto** | uma aba por projeto e três seções: **Resumo** (os quatro blocos, a **economia** — arquivos inteiros × resposta do grafo —, o uso da conversa por tipo de ferramenta e o **controle**: por IA, sessões nos registros, capturadas ao vivo, importadas depois e fora do cityPhy), **Conversas** (título, data e as skills e MCP de cada uma) e **Skills e MCP** usados ali. |
+| **Painel da biblioteca** | **Resumo**, **Skills** (busca, filtros usadas / nunca usadas / por IA, onde e em quais conversas cada uma foi usada) e **MCP** (chamadas por servidor, inclusive os do aplicativo). |
+
+A primeira versão da cidade continua em `/classica.html`.
 
 <table>
 <tr>
-<td width="50%"><img src="docs/images/tower-floor-panel.jpg" alt="Clique num andar: como entra no contexto, tamanho em tokens e ligações"><br><sub>Um andar da torre: como entra, ≈ tokens, ligações.</sub></td>
-<td width="50%"><img src="docs/images/condo-panel.jpg" alt="Clique num prédio: arquivos, símbolos e quais IAs mandam energia"><br><sub>Um prédio do projeto: arquivos, símbolos, quais IAs alimentam.</sub></td>
-</tr>
-<tr>
-<td colspan="2"><img src="docs/images/power-lines.jpg" alt="Cabos na cor de cada projeto correndo pelos postes de luz"><br><sub>Energia pelos postes de luz, uma cor por projeto.</sub></td>
+<td width="50%"><img src="docs/images/condo-panel.jpg" alt="Painel de um projeto: economia, uso da conversa e controle do cityPhy; antenas atrás do condomínio"><br><sub>Um projeto: economia, uso da conversa, controle; antenas atrás do muro.</sub></td>
+<td width="50%"><img src="docs/images/library-skills.jpg" alt="Biblioteca com a aba Skills: busca, filtros e uso de cada skill"><br><sub>A biblioteca: skills com busca e uso medido.</sub></td>
 </tr>
 </table>
 

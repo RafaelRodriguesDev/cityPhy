@@ -61,7 +61,10 @@ src/
     gatehouse.ts            side panel of a building
     search.ts, legend.ts
   main.ts
-index.html
+  maquete/                  the main page: maquete scene (towers, library, radio masts, condominiums), HUD,
+                            sidebar tabs, project/library panels with savings, conversations, skills and MCP use
+index.html                  main page (src/maquete/main.ts)
+classica.html               the first city (src/main.ts)
 examples/small-graph/       fake data for the demo and tests
 tests/                      layout, floors, wiring, readers
 docs/                       METAPHOR.md, ARCHITECTURE.md, TOWER-SCHEMA.md, PROMPT-TORRE.md (DIARY.md: local only)

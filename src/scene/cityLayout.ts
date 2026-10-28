@@ -45,9 +45,9 @@ export function layoutTowers(modelCounts: number[]): Array<{ origin: { x: number
   });
 }
 
-/** Project condominiums: a row of buildings along z; `rowLengths` is each row's length. */
-export function layoutProjects(rowLengths: number[], width: number): Array<{ origin: { x: number; z: number }; lot: Lot }> {
-  let front = LOT_FRONT_Z;
+/** Project condominiums: a row of buildings along z; `rowLengths` is each row's length; the first starts at `firstFront`. */
+export function layoutProjects(rowLengths: number[], width: number, firstFront = LOT_FRONT_Z): Array<{ origin: { x: number; z: number }; lot: Lot }> {
+  let front = firstFront;
   return rowLengths.map((len) => {
     const maxZ = front;
     const minZ = maxZ - len - 2 * LOT_MARGIN;
@@ -58,6 +58,18 @@ export function layoutProjects(rowLengths: number[], width: number): Array<{ ori
       lot: { minX: PROJECT_X - halfX, maxX: PROJECT_X + halfX + 2, minZ, maxZ, gate: 'west' },
     };
   });
+}
+
+/**
+ * The civic district (library and radio): the first lot east of the main street, on the corner of the
+ * main crossing, so it sits in the middle of the view; `length` runs along the street. Project
+ * condominiums line up behind it. `origin` is its north-west corner inside the fence.
+ */
+export function layoutCivic(length: number, width: number): { origin: { x: number; z: number }; lot: Lot } {
+  const minX = STREET_X + STREET_WIDTH / 2 + SIDEWALK + 2;
+  const maxZ = LOT_FRONT_Z;
+  const minZ = maxZ - length - 2 * LOT_MARGIN;
+  return { origin: { x: minX + LOT_MARGIN, z: maxZ - LOT_MARGIN }, lot: { minX, maxX: minX + width + 2 * LOT_MARGIN, minZ, maxZ, gate: 'west' } };
 }
 
 /** How far the city reaches along the street (for roads and lamps). */

@@ -29,6 +29,16 @@ Every visual piece maps to real data. If a piece has no data source, it does not
 | Annex | older sessions once the tower passes its height limit | session logs |
 | Skybridge | what agents actually share (shared instructions, linked skills) | same file / junction |
 
+## Civic district and antennas (inventory and measured use)
+
+| City | Means | Read from |
+|---|---|---|
+| Library | every skill each agent can see; the frieze shows where they came from (agent folder, account sync, plugin, project) | skill folders, enabled plugins |
+| Radio park | one lattice mast per **installed** MCP server: the catalog | agent configs, plugin manifests |
+| Consumption glasses | fresh tokens of the week and the day, filled by plan percent, config limit or the busiest recent day | agent logs (counts only) |
+| Antenna station (behind a condominium) | one mast per MCP server **the project used**, taller with more calls; gray when the agent app brought it; a dashed arc to the radio park when it is also installed | conversation logs (tool names and counts only) |
+| Radio central | the same station once a project used more than 6 servers: one building, the total on its sign | same |
+
 ## Motion
 
 No vehicles. Everything that moves is **light**:

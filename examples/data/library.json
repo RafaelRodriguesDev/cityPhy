@@ -1,0 +1,495 @@
+{
+  "agents": [
+    "claude",
+    "codex",
+    "antigravity"
+  ],
+  "skills": [
+    {
+      "name": "cityphy",
+      "agents": [
+        "antigravity",
+        "claude",
+        "codex"
+      ],
+      "copies": [
+        {
+          "name": "cityphy",
+          "agent": "claude",
+          "origin": "synced",
+          "plugin": null,
+          "project": null,
+          "bytes": 13250,
+          "tokensApprox": 910,
+          "updatedAt": "2026-10-13T09:00:00.000Z",
+          "hash": "h1"
+        },
+        {
+          "name": "cityphy",
+          "agent": "codex",
+          "origin": "synced",
+          "plugin": null,
+          "project": null,
+          "bytes": 3237,
+          "tokensApprox": 3241,
+          "updatedAt": "2026-10-13T09:00:00.000Z",
+          "hash": "h1"
+        },
+        {
+          "name": "cityphy",
+          "agent": "antigravity",
+          "origin": "synced",
+          "plugin": null,
+          "project": null,
+          "bytes": 2514,
+          "tokensApprox": 1252,
+          "updatedAt": "2026-10-13T09:00:00.000Z",
+          "hash": "h1"
+        }
+      ],
+      "divergent": false,
+      "origin": "synced",
+      "plugin": null,
+      "tokensApprox": 3241
+    },
+    {
+      "name": "code-review",
+      "agents": [
+        "antigravity",
+        "claude",
+        "codex"
+      ],
+      "copies": [
+        {
+          "name": "code-review",
+          "agent": "claude",
+          "origin": "synced",
+          "plugin": null,
+          "project": null,
+          "bytes": 4574,
+          "tokensApprox": 2040,
+          "updatedAt": "2026-10-13T09:00:00.000Z",
+          "hash": "h1"
+        },
+        {
+          "name": "code-review",
+          "agent": "codex",
+          "origin": "synced",
+          "plugin": null,
+          "project": null,
+          "bytes": 5423,
+          "tokensApprox": 2461,
+          "updatedAt": "2026-10-13T09:00:00.000Z",
+          "hash": "h1"
+        },
+        {
+          "name": "code-review",
+          "agent": "antigravity",
+          "origin": "synced",
+          "plugin": null,
+          "project": null,
+          "bytes": 7199,
+          "tokensApprox": 2867,
+          "updatedAt": "2026-10-13T09:00:00.000Z",
+          "hash": "h1"
+        }
+      ],
+      "divergent": false,
+      "origin": "synced",
+      "plugin": null,
+      "tokensApprox": 2867
+    },
+    {
+      "name": "graphify",
+      "agents": [
+        "antigravity",
+        "claude",
+        "codex"
+      ],
+      "copies": [
+        {
+          "name": "graphify",
+          "agent": "claude",
+          "origin": "synced",
+          "plugin": null,
+          "project": null,
+          "bytes": 11114,
+          "tokensApprox": 3496,
+          "updatedAt": "2026-10-13T09:00:00.000Z",
+          "hash": "h1"
+        },
+        {
+          "name": "graphify",
+          "agent": "codex",
+          "origin": "synced",
+          "plugin": null,
+          "project": null,
+          "bytes": 5672,
+          "tokensApprox": 1429,
+          "updatedAt": "2026-10-13T09:00:00.000Z",
+          "hash": "h1"
+        },
+        {
+          "name": "graphify",
+          "agent": "antigravity",
+          "origin": "synced",
+          "plugin": null,
+          "project": null,
+          "bytes": 7167,
+          "tokensApprox": 2054,
+          "updatedAt": "2026-10-13T09:00:00.000Z",
+          "hash": "h2"
+        }
+      ],
+      "divergent": true,
+      "origin": "synced",
+      "plugin": null,
+      "tokensApprox": 3496
+    },
+    {
+      "name": "api-docs",
+      "agents": [
+        "antigravity"
+      ],
+      "copies": [
+        {
+          "name": "api-docs",
+          "agent": "antigravity",
+          "origin": "user",
+          "plugin": null,
+          "project": null,
+          "bytes": 3025,
+          "tokensApprox": 1415,
+          "updatedAt": "2026-10-13T09:00:00.000Z",
+          "hash": "h1"
+        }
+      ],
+      "divergent": false,
+      "origin": "user",
+      "plugin": null,
+      "tokensApprox": 1415
+    },
+    {
+      "name": "db-migrations",
+      "agents": [
+        "claude"
+      ],
+      "copies": [
+        {
+          "name": "db-migrations",
+          "agent": "claude",
+          "origin": "user",
+          "plugin": null,
+          "project": null,
+          "bytes": 13293,
+          "tokensApprox": 3158,
+          "updatedAt": "2026-10-13T09:00:00.000Z",
+          "hash": "h1"
+        }
+      ],
+      "divergent": false,
+      "origin": "user",
+      "plugin": null,
+      "tokensApprox": 3158
+    },
+    {
+      "name": "k8s-deploy",
+      "agents": [
+        "antigravity"
+      ],
+      "copies": [
+        {
+          "name": "k8s-deploy",
+          "agent": "antigravity",
+          "origin": "user",
+          "plugin": null,
+          "project": null,
+          "bytes": 12790,
+          "tokensApprox": 3401,
+          "updatedAt": "2026-10-13T09:00:00.000Z",
+          "hash": "h1"
+        }
+      ],
+      "divergent": false,
+      "origin": "user",
+      "plugin": null,
+      "tokensApprox": 3401
+    },
+    {
+      "name": "load-test",
+      "agents": [
+        "antigravity"
+      ],
+      "copies": [
+        {
+          "name": "load-test",
+          "agent": "antigravity",
+          "origin": "user",
+          "plugin": null,
+          "project": null,
+          "bytes": 10362,
+          "tokensApprox": 2008,
+          "updatedAt": "2026-10-13T09:00:00.000Z",
+          "hash": "h1"
+        }
+      ],
+      "divergent": false,
+      "origin": "user",
+      "plugin": null,
+      "tokensApprox": 2008
+    },
+    {
+      "name": "perf-budget",
+      "agents": [
+        "antigravity"
+      ],
+      "copies": [
+        {
+          "name": "perf-budget",
+          "agent": "antigravity",
+          "origin": "user",
+          "plugin": null,
+          "project": null,
+          "bytes": 7485,
+          "tokensApprox": 2172,
+          "updatedAt": "2026-10-13T09:00:00.000Z",
+          "hash": "h1"
+        }
+      ],
+      "divergent": false,
+      "origin": "user",
+      "plugin": null,
+      "tokensApprox": 2172
+    },
+    {
+      "name": "release-notes",
+      "agents": [
+        "claude"
+      ],
+      "copies": [
+        {
+          "name": "release-notes",
+          "agent": "claude",
+          "origin": "user",
+          "plugin": null,
+          "project": null,
+          "bytes": 3799,
+          "tokensApprox": 2706,
+          "updatedAt": "2026-10-13T09:00:00.000Z",
+          "hash": "h1"
+        }
+      ],
+      "divergent": false,
+      "origin": "user",
+      "plugin": null,
+      "tokensApprox": 2706
+    },
+    {
+      "name": "run-tests",
+      "agents": [
+        "claude"
+      ],
+      "copies": [
+        {
+          "name": "run-tests",
+          "agent": "claude",
+          "origin": "user",
+          "plugin": null,
+          "project": null,
+          "bytes": 5888,
+          "tokensApprox": 2051,
+          "updatedAt": "2026-10-13T09:00:00.000Z",
+          "hash": "h1"
+        }
+      ],
+      "divergent": false,
+      "origin": "user",
+      "plugin": null,
+      "tokensApprox": 2051
+    },
+    {
+      "name": "sql-review",
+      "agents": [
+        "antigravity"
+      ],
+      "copies": [
+        {
+          "name": "sql-review",
+          "agent": "antigravity",
+          "origin": "user",
+          "plugin": null,
+          "project": null,
+          "bytes": 4769,
+          "tokensApprox": 3243,
+          "updatedAt": "2026-10-13T09:00:00.000Z",
+          "hash": "h1"
+        }
+      ],
+      "divergent": false,
+      "origin": "user",
+      "plugin": null,
+      "tokensApprox": 3243
+    },
+    {
+      "name": "ui-review",
+      "agents": [
+        "claude"
+      ],
+      "copies": [
+        {
+          "name": "ui-review",
+          "agent": "claude",
+          "origin": "user",
+          "plugin": null,
+          "project": null,
+          "bytes": 4572,
+          "tokensApprox": 2181,
+          "updatedAt": "2026-10-13T09:00:00.000Z",
+          "hash": "h1"
+        }
+      ],
+      "divergent": false,
+      "origin": "user",
+      "plugin": null,
+      "tokensApprox": 2181
+    },
+    {
+      "name": "bundle-size",
+      "agents": [
+        "codex"
+      ],
+      "copies": [
+        {
+          "name": "bundle-size",
+          "agent": "codex",
+          "origin": "plugin",
+          "plugin": "web-kit",
+          "project": null,
+          "bytes": 4650,
+          "tokensApprox": 789,
+          "updatedAt": "2026-10-13T09:00:00.000Z",
+          "hash": "h1"
+        }
+      ],
+      "divergent": false,
+      "origin": "plugin",
+      "plugin": "web-kit",
+      "tokensApprox": 789
+    },
+    {
+      "name": "lint-fix",
+      "agents": [
+        "codex"
+      ],
+      "copies": [
+        {
+          "name": "lint-fix",
+          "agent": "codex",
+          "origin": "plugin",
+          "plugin": "web-kit",
+          "project": null,
+          "bytes": 6272,
+          "tokensApprox": 2027,
+          "updatedAt": "2026-10-13T09:00:00.000Z",
+          "hash": "h1"
+        }
+      ],
+      "divergent": false,
+      "origin": "plugin",
+      "plugin": "web-kit",
+      "tokensApprox": 2027
+    },
+    {
+      "name": "storybook",
+      "agents": [
+        "codex"
+      ],
+      "copies": [
+        {
+          "name": "storybook",
+          "agent": "codex",
+          "origin": "plugin",
+          "plugin": "web-kit",
+          "project": null,
+          "bytes": 10184,
+          "tokensApprox": 663,
+          "updatedAt": "2026-10-13T09:00:00.000Z",
+          "hash": "h1"
+        }
+      ],
+      "divergent": false,
+      "origin": "plugin",
+      "plugin": "web-kit",
+      "tokensApprox": 663
+    }
+  ],
+  "mcps": [
+    {
+      "name": "db-inspector",
+      "agents": [
+        "claude",
+        "codex"
+      ],
+      "copies": [
+        {
+          "name": "db-inspector",
+          "agent": "claude",
+          "origin": "user",
+          "plugin": null,
+          "project": null,
+          "transport": "local",
+          "host": null
+        },
+        {
+          "name": "db-inspector",
+          "agent": "codex",
+          "origin": "user",
+          "plugin": null,
+          "project": null,
+          "transport": "local",
+          "host": null
+        }
+      ],
+      "transport": "local",
+      "host": null
+    },
+    {
+      "name": "issue-tracker",
+      "agents": [
+        "claude"
+      ],
+      "copies": [
+        {
+          "name": "issue-tracker",
+          "agent": "claude",
+          "origin": "user",
+          "plugin": null,
+          "project": null,
+          "transport": "remote",
+          "host": "tools.example.com"
+        }
+      ],
+      "transport": "remote",
+      "host": "tools.example.com"
+    },
+    {
+      "name": "storybook",
+      "agents": [
+        "codex"
+      ],
+      "copies": [
+        {
+          "name": "storybook",
+          "agent": "codex",
+          "origin": "plugin",
+          "plugin": "web-kit",
+          "project": null,
+          "transport": "local",
+          "host": null
+        }
+      ],
+      "transport": "local",
+      "host": null
+    }
+  ]
+}

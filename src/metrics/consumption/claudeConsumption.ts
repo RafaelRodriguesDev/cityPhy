@@ -5,7 +5,7 @@ import { claudeHome } from '../../towers/claude/sources.ts';
 import { recentLogs } from './recentLogs.ts';
 import { dayKey, lastDays, summarizeDays, type DayUsage, type ToolConsumption } from './types.ts';
 
-type Calls = Array<{ day: string; fresh: number; cached: number }>;
+type Calls = Array<{ id: string; day: string; fresh: number; cached: number }>;
 const cache = new Map<string, { mtime: number; calls: Calls }>();
 
 /** API calls of one session log (deduplicated by message id), with their day. */
@@ -29,6 +29,7 @@ async function callsOf(path: string): Promise<Calls> {
     seen.add(m.id);
     const u = m.usage;
     calls.push({
+      id: m.id,
       day: dayKey(new Date(d.timestamp)),
       fresh: (u.input_tokens ?? 0) + (u.cache_creation_input_tokens ?? 0) + (u.output_tokens ?? 0),
       cached: u.cache_read_input_tokens ?? 0,
@@ -38,11 +39,17 @@ async function callsOf(path: string): Promise<Calls> {
   return calls;
 }
 
-/** Claude Code in every folder, last 7 days. Claude Code does not record plan usage, so no windows. */
+/**
+ * Claude Code in every folder, last 7 days. Claude Code does not record plan usage, so no windows.
+ * A resumed or forked conversation copies earlier messages into a new log, so calls are counted once across files.
+ */
 export async function claudeConsumption(limits: ToolConsumption['limits']): Promise<ToolConsumption> {
   const days = lastDays();
+  const seen = new Set<string>();
   for (const f of recentLogs(join(claudeHome(), 'projects'))) {
     for (const c of await callsOf(f)) {
+      if (seen.has(c.id)) continue;
+      seen.add(c.id);
       const d: DayUsage | undefined = days.get(c.day);
       if (!d) continue;
       d.fresh += c.fresh;

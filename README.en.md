@@ -10,7 +10,7 @@ context. Built on [graphify](https://github.com/safishamsi/graphify). Everything
 [Português](README.md) · **English** · [How it works](#how-it-works) · [Install](#install) · [Commands](#commands) ·
 [Credits](CREDITS.md)
 
-![The example city: agent towers on the left, project condominiums on the right, power lines on the lamp posts](docs/images/city-overview.jpg)
+![The example city: a maquete with the agent towers, the condominiums with their antennas behind, the library and the radio park](docs/images/city-overview.jpg)
 
 <sub>Screenshot of the bundled **fictional** example (`npm run dev:example`): three projects and three agents.</sub>
 
@@ -33,24 +33,30 @@ cityPhy attacks what goes *into* the conversation:
 
 ## What you see
 
+A **maquete** (scale model): flat colors, thin outlines, sun shadows, seen from above. Hover a piece for its weight;
+click it and the camera flies there and opens its panel. Every panel has the same four blocks: **Context** (paid in
+every session), **Input** (fetched when needed), **Output** (produced or spent) and **Expected vs. actual** (what to look
+at).
+
 | Piece | Meaning |
 |---|---|
-| **Agent tower** (west of the main street) | one per AI agent. **Ground floor** = what the agent loads in *every* session (rules, instruction files, memory index, skills listing). Then memories, skills and the latest sessions. Older sessions move to an **annex**. Floor height = content weight (≈ tokens). |
-| **Condominium** (east of the street) | one fenced lot per project, one building per top folder, sized by file count. Each project has **its own color**. |
-| **Power line** | when an agent works on a project, a cable leaves its tower, runs along the **street-lamp posts**, crosses the street through the air and enters the project's **gatehouse**, then runs on the ground to every building. Light pulses travel along it in the project's color. Nothing ever stands on a street. |
-| **Model towers** | next to each agent, one tower per model used (e.g. two Claude models, three levels of the same GPT). Each **band** is a reasoning level (low, medium, high...), sized by the tokens spent. The panel has **Summary**, **Levels**, **Calculator** (type how many calls a task will take and see the cost at each level: fresh × cached tokens) and **Compare** (the agent's models side by side). |
-| **Consumption tower** | two **glass** blocks that fill up to 100%: **week** and **day** (or the 5-hour window, when the tool reports it). Uses the tool's **real plan percent** when it records one (e.g. Codex); otherwise the limit you set in the config; with no limit, just the tokens. |
-| **Tabbed panels** | on the left, **General** plus one tab per tool found (a new tool gets its own tab). In condominiums: Summary, Savings, Memory and Options. |
-| **Live power** | a cable is **lit, with pulses**, only while the agent is working on the project (it wrote to its logs in the last 15 minutes; set `activeWindowMinutes`). Otherwise it stays **dark**: it only shows the agent worked there before. The page refreshes every 30 s; inactive cables can be hidden. |
-| **Gatehouse panel** | hover anything for its weight; click to open its panel. |
+| **Top bar** | five numbers: fixed context per session, consumption of the week, agents working now, **cityPhy savings** (tokens the graph kept out and how many sessions went through cityPhy) and things to look at. |
+| **Agent tower** (west of the street) | one floor per section, with window rows and setbacks. **Ground floor** = what the agent loads in *every* session (rules, instruction files, memory index, skills listing); then memory, skills and sessions. Height = weight (≈ tokens). |
+| **Consumption glasses** | two measuring glasses next to the tower, **week** and **day**. They fill with the tool's real plan percent when it records one (e.g. Codex), with the limit in the config or, with no limit, against the busiest day of the last 7. |
+| **Condominium** (east) | one walled lot per project, with a gatehouse; one building per top folder (houses with roofs when small, blocks when large). Each project has **its own color**. |
+| **Project antennas** | behind each condominium, one radio mast per **MCP server the project used** in its conversations, taller with more calls; gray when the agent app brought the server itself. A dashed arc links it to the same server in the civic district when it is configured. Above 6 servers it becomes a **radio central**: a building with masts on its roof and the total on its sign. |
+| **Civic district** | the **library** (a building with columns; the frieze shows where the skills came from) and the **radio park**, one lattice mast per **installed** MCP server: the catalog of what the agents can use. |
+| **Power line** | a cable leaves the agent's tower, runs along the **street-lamp posts**, crosses the street through the air and enters the gatehouse. It is **lit, with a pulse**, only while the agent works on the project (it wrote to its logs in the last 15 minutes; set `activeWindowMinutes`). |
+| **Sidebar** | tabs **Agents**, **Projects** (paged) and **Civic**. |
+| **Project panel** | one tab per project and three sections: **Summary** (the four blocks, **savings** — whole files vs. graph answer —, what entered the conversation per tool kind and **control**: per agent, sessions in its logs, captured live, imported later and never seen by cityPhy), **Conversations** (title, date and the skills and MCP each one used) and the **Skills and MCP** used there. |
+| **Library panel** | **Summary**, **Skills** (search, used / never used / per-agent filters, where and in which conversations each was used) and **MCP** (calls per server, including the agent app's own). |
+
+The first version of the city is still at `/classica.html`.
 
 <table>
 <tr>
-<td width="50%"><img src="docs/images/tower-floor-panel.jpg" alt="Clicking a tower floor shows how it is loaded, its size in tokens and its links"><br><sub>A tower floor: how it is loaded, ≈ tokens, links.</sub></td>
-<td width="50%"><img src="docs/images/condo-panel.jpg" alt="Clicking a project building shows files, symbols and which agents power it"><br><sub>A project building: files, symbols, which agents power it.</sub></td>
-</tr>
-<tr>
-<td colspan="2"><img src="docs/images/power-lines.jpg" alt="Power lines in each project's color running on the lamp posts"><br><sub>Power lines on the lamp posts, one color per project.</sub></td>
+<td width="50%"><img src="docs/images/condo-panel.jpg" alt="A project panel: savings, conversation use and cityPhy control; antennas behind the condominium"><br><sub>A project: savings, conversation use, control; antennas behind the wall.</sub></td>
+<td width="50%"><img src="docs/images/library-skills.jpg" alt="The library's Skills tab: search, filters and the measured use of each skill"><br><sub>The library: skills with search and measured use.</sub></td>
 </tr>
 </table>
 

@@ -1,0 +1,11 @@
+{
+  "graph": true,
+  "memory": true,
+  "inject": true,
+  "injectBudget": 800,
+  "metrics": true,
+  "localLlm": false,
+  "agents": [
+    "codex"
+  ]
+}

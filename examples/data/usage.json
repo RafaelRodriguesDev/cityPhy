@@ -14,13 +14,13 @@
     "claude": {
       "projects": {
         "shop-api": {
-          "sessions": 1,
+          "sessions": 9,
           "models": {},
           "tools": {},
           "breakdown": []
         },
         "web-store": {
-          "sessions": 1,
+          "sessions": 9,
           "models": {},
           "tools": {},
           "breakdown": []
@@ -104,13 +104,13 @@
     "codex": {
       "projects": {
         "web-store": {
-          "sessions": 1,
+          "sessions": 9,
           "models": {},
           "tools": {},
           "breakdown": []
         },
         "mobile-app": {
-          "sessions": 1,
+          "sessions": 9,
           "models": {},
           "tools": {},
           "breakdown": []

@@ -13,6 +13,8 @@ export interface Stage {
   addAnimator(a: Animator): void;
   /** Points the camera at the middle of the city so every lot is in view. */
   frame(center: THREE.Vector3, span: number): void;
+  /** Moves the camera close to one piece, keeping the city's fog. */
+  focus(center: THREE.Vector3, span: number): void;
 }
 
 /** Renderer, camera and an on-demand loop: frames only while something changes. */
@@ -84,6 +86,13 @@ export function createStage(container: HTMLElement): Stage {
       controls.target.copy(center);
       camera.position.set(center.x - 0.5 * s, center.y + 0.42 * s, center.z + 0.62 * s);
       scene.fog = new THREE.Fog(0x0b0f17, s * 1.2, s * 3.2);
+      controls.update();
+      requestRender();
+    },
+    focus(center, span) {
+      const s = Math.max(14, span) * Math.max(1, 1.4 / camera.aspect);
+      controls.target.copy(center);
+      camera.position.set(center.x - 0.5 * s, center.y + 0.42 * s, center.z + 0.62 * s);
       controls.update();
       requestRender();
     },

@@ -1,0 +1,3 @@
+{"at":"2026-10-21T09:00:00.000Z","agent":"claude","question":"(exemplo) consulta 1","returned":3138,"avoided":61171,"files":12}
+{"at":"2026-10-21T17:00:00.000Z","agent":"codex","question":"(exemplo) consulta 2","returned":3116,"avoided":67800,"files":14}
+{"at":"2026-10-22T01:00:00.000Z","agent":"claude","question":"(exemplo) consulta 3","returned":1394,"avoided":38738,"files":8}

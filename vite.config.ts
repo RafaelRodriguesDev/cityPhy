@@ -15,5 +15,7 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [dataPlugin(dataDir, example ? null : loadConfig)],
     server: { host: '127.0.0.1', port: 5190, strictPort: true },
+    // The maquete is the main page; the first city stays at /classica.html.
+    build: { rollupOptions: { input: { main: resolve(process.cwd(), 'index.html'), classica: resolve(process.cwd(), 'classica.html') } } },
   };
 });

@@ -1,68 +1,56 @@
 import type { ProjectExtras } from '../readers/projectExtras.ts';
 import type { ProjectSummary } from '../readers/projects.ts';
 import type { ProjectBuilding } from '../scene/projectBlock.ts';
+import { type Check, none, showPiece, stat } from './blocks.ts';
+import { short } from './agentView.ts';
 import { escapeHtml, formatDate } from './format.ts';
-import { renderTabs } from './tabs.ts';
 
 const n = (v: number) => v.toLocaleString('pt-BR');
 const onOff = (on: boolean, label: string) => `<span class="pill${on ? ' on' : ''}">${on ? '✓' : '✗'} ${label}</span>`;
-const noData = '<p class="muted">Sem dados ainda.</p>';
 
-function savingsTab(x: ProjectExtras | undefined): string {
-  if (!x?.savings.queries) return `${noData}<p class="muted">Aparece quando uma IA usar <code>cityphy query</code>.</p>`;
-  const s = x.savings;
-  const agents = Object.entries(s.byAgent).map(([a, v]) => `<li>${escapeHtml(a)}: ${n(v.queries)} consulta(s) · ≈ ${n(v.saved)} tokens poupados</li>`).join('');
-  const last = s.last.map((q) => `<li>${escapeHtml(q.question)} <span class="muted-inline">${n(q.returned)} × ${n(q.avoided)}</span></li>`).join('');
-  return `
-    <div class="metrics"><div><span>Tokens economizados</span><strong>≈ ${n(s.saved)}</strong></div><div><span>Consultas ao grafo</span><strong>${n(s.queries)}</strong></div></div>
-    <p class="muted">Devolvido pelo grafo: ≈ ${n(s.returned)} · arquivos inteiros evitados: ≈ ${n(s.avoided)}</p>
-    <h3>Por IA</h3><ul>${agents}</ul>
-    <h3>Últimas consultas (devolvido × evitado)</h3><ul>${last}</ul>`;
+/** A tool that powers this project, with when it last worked here. */
+export interface Feed {
+  agent: string;
+  name: string;
+  status: string; // "ativo agora", "há 3 h"
 }
 
-function memoryTab(x: ProjectExtras | undefined): string {
-  const m = x?.memory;
-  if (!m) return `${noData}<p class="muted">Ligue a memória com <code>cityphy setup</code>.</p>`;
-  const agents = Object.entries(m.byAgent).map(([a, v]) => `${escapeHtml(a)} ${n(v)}`).join(' · ');
-  const recent = m.recent.map((o) => `<li><span class="muted-inline">${formatDate(o.at)} · ${escapeHtml(o.agent)}</span><br>${escapeHtml(o.summary)}</li>`).join('');
-  return `
-    <div class="metrics"><div><span>Observações</span><strong>${n(m.observations)}</strong></div><div><span>Sessões</span><strong>${n(m.sessions)}</strong></div></div>
-    <dl><dt>Por IA</dt><dd>${agents || '—'}</dd><dt>Última</dt><dd>${formatDate(m.last)}</dd>
-    <dt>Resumo inicial</dt><dd>${x?.lessonsTokens === null ? '—' : `≈ ${n(x!.lessonsTokens!)} tokens (LESSONS.md)`}</dd></dl>
-    <h3>Recente</h3><ul>${recent || '<li>—</li>'}</ul>`;
-}
-
-function optionsTab(x: ProjectExtras | undefined): string {
-  const o = x?.options;
-  if (!o) return noData;
-  return `
-    <div class="pills">${onOff(o.graph, 'grafo')}${onOff(o.memory, 'memória')}${onOff(o.inject, `resumo inicial (${n(o.injectBudget)} tokens)`)}${onOff(o.metrics, 'métricas')}${onOff(o.localLlm, 'IA local')}</div>
-    <dl><dt>IAs registradas</dt><dd>${o.agents.length ? o.agents.map(escapeHtml).join(', ') : 'nenhuma — rode cityphy setup'}</dd></dl>`;
-}
-
-/** Side panel for a project building, with tabs for the whole condominium. */
-export function showProjectBuilding(panel: HTMLElement, b: ProjectBuilding, linkedAgents: string[]): void {
+/** Side panel for a project building, with the whole condominium in the four blocks. */
+export function showProjectBuilding(panel: HTMLElement, b: ProjectBuilding, feeds: Feed[]): void {
   const p = b.project as ProjectSummary & { cityphy?: ProjectExtras; group?: { name: string; path: string }; groupCityphy?: ProjectExtras };
-  panel.innerHTML = `
-    <button class="close" aria-label="Fechar">×</button>
-    <p class="kicker">Condomínio ${escapeHtml(p.name)} · prédio ${escapeHtml(b.part.name)}</p>
-    <h2>${escapeHtml(p.name)}</h2>
-    <div class="tabs-host"></div>`;
-  renderTabs(panel.querySelector('.tabs-host')!, [
-    {
-      label: 'Resumo',
-      html: `<dl>
-        <dt>Prédio</dt><dd>${escapeHtml(b.part.name)}: ${n(b.part.files)} arquivos · ${n(b.part.nodes)} símbolos</dd>
-        <dt>Projeto</dt><dd>${n(p.nodes)} nós · ${n(p.edges)} ligações</dd>
-        <dt>Raiz</dt><dd class="path">${escapeHtml(p.root)}</dd>
-        ${p.group ? `<dt>Grupo</dt><dd>${escapeHtml(p.group.name)} <span class="muted-inline">(as IAs abrem ${escapeHtml(p.group.path)}; memória do grupo)</span></dd>` : ''}
-        <dt>Energia de</dt><dd>${linkedAgents.length ? linkedAgents.map(escapeHtml).join(', ') : 'nenhuma IA ligada'}</dd></dl>`,
-    },
-    { label: 'Economia', html: savingsTab(p.cityphy) },
-    // In a group, sessions and memory are recorded at the group root.
-    { label: p.group ? 'Memória do grupo' : 'Memória', html: memoryTab(p.groupCityphy ?? p.cityphy) },
-    { label: 'Opções', html: optionsTab(p.cityphy) },
-  ]);
-  panel.hidden = false;
-  panel.querySelector('.close')!.addEventListener('click', () => (panel.hidden = true));
+  const x = p.cityphy;
+  const mem = (p.groupCityphy ?? x)?.memory;
+  const o = x?.options;
+  const s = x?.savings;
+
+  const checks: Check[] = [];
+  if (!o) checks.push({ level: 'warn', text: 'Projeto sem opções: rode <code>cityphy setup</code>.' });
+  else {
+    const unregistered = feeds.filter((f) => !o.agents.includes(f.agent));
+    if (unregistered.length) checks.push({ level: 'warn', text: `${unregistered.map((f) => `<b>${escapeHtml(f.name)}</b>`).join(', ')} trabalha(m) aqui sem estar registrada(s) no setup do projeto.` });
+    if (!o.memory) checks.push({ level: 'info', text: 'Memória local desligada.' });
+    if (!o.inject) checks.push({ level: 'info', text: 'Resumo inicial desligado: cada sessão começa sem contexto do trabalho anterior.' });
+    if (o.inject && x?.lessonsTokens != null && x.lessonsTokens > o.injectBudget) checks.push({ level: 'warn', text: `Resumo inicial (≈ ${n(x.lessonsTokens)}) acima do teto de ${n(o.injectBudget)} tokens.` });
+  }
+  if (!s?.queries) checks.push({ level: 'info', text: 'Nenhuma IA consultou o grafo ainda: elas estão lendo arquivos inteiros.' });
+  if (!feeds.length) checks.push({ level: 'info', text: 'Nenhuma IA trabalhou aqui.' });
+
+  const recent = mem?.recent.slice(0, 4).map((r) => `<li><span class="muted-inline">${formatDate(r.at)} · ${escapeHtml(r.agent)}</span><br>${escapeHtml(r.summary)}</li>`).join('');
+  showPiece(panel, {
+    kicker: `Condomínio ${p.name} · prédio ${b.part.name}`,
+    title: p.name,
+    badges: o ? [onOff(o.graph, 'grafo'), onOff(o.memory, 'memória'), onOff(o.inject, 'resumo inicial'), onOff(o.metrics, 'métricas')] : [],
+    context:
+      o?.inject && x?.lessonsTokens != null
+        ? `${stat(`≈ ${n(x.lessonsTokens)}`, `tokens do resumo inicial (teto ${n(o.injectBudget)})`)}<p class="muted">Entra no começo de toda sessão neste projeto.</p>`
+        : none('Nada do projeto entra sozinho no começo da sessão.'),
+    input: `<div class="stats">${stat(s?.queries ? n(s.queries) : '0', 'consultas ao grafo')}${stat(s?.queries ? `≈ ${short(s.saved)}` : '—', 'tokens economizados')}</div>
+      <dl><dt>Prédio</dt><dd>${escapeHtml(b.part.name)}: ${n(b.part.files)} arquivos · ${n(b.part.nodes)} símbolos</dd>
+      <dt>Projeto</dt><dd>${n(p.nodes)} símbolos · ${n(p.edges)} ligações</dd>
+      <dt>Raiz</dt><dd class="path">${escapeHtml(p.root)}</dd>
+      ${p.group ? `<dt>Grupo</dt><dd>${escapeHtml(p.group.name)}</dd>` : ''}</dl>`,
+    output: `<h4>Energia de</h4>${feeds.length ? `<ul class="rows">${feeds.map((f) => `<li>${escapeHtml(f.name)} <span class="muted-inline">${escapeHtml(f.status)}</span></li>`).join('')}</ul>` : none('Nenhuma IA.')}
+      <h4>Memória${p.group ? ' do grupo' : ''}</h4>${mem ? `<p>${n(mem.observations)} observações · ${n(mem.sessions)} sessões · última ${formatDate(mem.last)}</p><ul class="rows">${recent}</ul>` : none('Sem memória ainda.')}`,
+    checks,
+  });
 }

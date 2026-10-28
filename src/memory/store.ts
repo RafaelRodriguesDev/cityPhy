@@ -106,6 +106,27 @@ export class MemoryStore {
     return { observations: Number(one.n), sessions: Number(one.s), last: (one.last as string) ?? null, byAgent };
   }
 
+  /** Per agent: sessions brought in by `mem import` (old, before cityPhy) vs captured live by the hooks, and the first live one. */
+  sessionOrigins(): Record<string, { imported: number; live: number; firstLive: string | null }> {
+    const rows = this.db
+      .prepare(
+        `SELECT agent, session, MIN(at) first, MAX(CASE WHEN summary LIKE '%(importada)%' THEN 1 ELSE 0 END) imported
+         FROM observations GROUP BY agent, session`,
+      )
+      .all() as Array<Record<string, unknown>>;
+    const out: Record<string, { imported: number; live: number; firstLive: string | null }> = {};
+    for (const r of rows) {
+      const a = (out[String(r.agent)] ??= { imported: 0, live: 0, firstLive: null });
+      if (Number(r.imported)) a.imported++;
+      else {
+        a.live++;
+        const first = String(r.first);
+        if (!a.firstLive || first < a.firstLive) a.firstLive = first;
+      }
+    }
+    return out;
+  }
+
   close(): void {
     this.db.close();
   }

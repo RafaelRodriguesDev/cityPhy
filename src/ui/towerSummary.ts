@@ -1,81 +1,100 @@
-import { SECTIONS, SECTION_NAMES, type TowerGraph } from '../towers/schema.ts';
+import { SECTIONS, SECTION_NAMES } from '../towers/schema.ts';
 import { SECTION_COLOR } from '../scene/towerMesh.ts';
+import { ORIGIN_COLOR, ORIGIN_NAMES } from '../scene/library.ts';
+import { MCP_COLOR } from '../scene/radio.ts';
 import { blockValues } from '../scene/consumptionTower.ts';
 import { groupByModel } from '../metrics/modelStats.ts';
-import type { ToolConsumption } from '../metrics/consumption/types.ts';
-import type { ModelBreakdown } from '../metrics/usage/types.ts';
+import { ago } from '../metrics/activity/types.ts';
+import type { Library, Origin } from '../library/types.ts';
+import { type AgentView, dot, groundOf, short, swatch } from './agentView.ts';
 import { escapeHtml } from './format.ts';
-import { renderTabs } from './tabs.ts';
 
-const hex = (n: number) => `#${n.toString(16).padStart(6, '0')}`;
-const num = (v: number) => v.toLocaleString('pt-BR');
+const n = (v: number) => v.toLocaleString('pt-BR');
 
 export interface ProjectLegend {
   name: string;
   color: number;
   /** Agents feeding this project (empty: no power). */
   agents: string[];
+  nodes: number;
+  buildings: number;
 }
 
-export interface ToolSummary {
-  agent: string;
-  name: string;
-  tower: TowerGraph | null;
-  consumption: ToolConsumption | null;
-  models: ModelBreakdown[];
+export interface SidebarHandlers {
+  onAgent(agent: string): void;
+  onProject(name: string): void;
+  onLibrary(): void;
+  onOverview(): void;
+  onPulses(on: boolean): void;
+  onShowInactive(on: boolean): void;
 }
 
-function toolTab(t: ToolSummary, projects: ProjectLegend[]): string {
-  const parts: string[] = [];
-  if (t.consumption) {
-    const blocks = blockValues(t.consumption)
-      .map((b) => `<li>${escapeHtml(b.label)}: ${b.fill === null ? 'sem limite' : `${Math.round(b.fill * 100)}%`}</li>`)
-      .join('');
-    parts.push(`<div class="metrics"><div><span>Hoje</span><strong>${num(t.consumption.today.fresh)}</strong></div><div><span>Semana</span><strong>${num(t.consumption.week.fresh)}</strong></div></div>
-      <p class="muted">tokens novos, todas as pastas</p><ul class="legend">${blocks}</ul>`);
-  } else parts.push('<p class="muted">Sem leitor de consumo para esta ferramenta.</p>');
-
-  const models = groupByModel(t.models);
-  parts.push(`<h3>Modelos</h3>${models.length ? `<ul>${models.map((m) => `<li>${escapeHtml(m.model)} <span class="muted-inline">${num(m.total)} tokens</span></li>`).join('')}</ul>` : '<p class="muted">—</p>'}`);
-
-  if (t.tower) {
-    const ground = t.tower.nodes.filter((n) => n.cityphy.load === 'always');
-    const known = ground.reduce((s, n) => s + (n.cityphy.tokensApprox ?? 0), 0);
-    const unknown = ground.filter((n) => n.cityphy.tokensApprox === null).length;
-    parts.push(`<h3>Torre</h3><p>${t.tower.nodes.length} andares · térreo ≈ ${num(known)} tokens${unknown ? ` + ${unknown} não medido` : ''} em toda sessão</p>`);
-  }
-  const powers = projects.filter((p) => p.agents.includes(t.name)).map((p) => p.name);
-  parts.push(`<h3>Alimenta</h3><p>${powers.length ? powers.map(escapeHtml).join(', ') : '—'}</p>`);
-  return parts.join('');
+/** A thin bar: how full the week is (plan, limit or history), as on the glass tower. */
+function weekBar(a: AgentView): string {
+  if (!a.consumption) return '';
+  const week = blockValues(a.consumption)[0];
+  const pct = Math.round((week.fill ?? 0) * 100);
+  return `<div class="meter" title="${escapeHtml(week.text)}"><span style="width:${pct}%"></span></div>`;
 }
 
-/** Top-left panel: a "Geral" tab plus one tab per tool found (new tools get a tab by themselves). */
+function agentCard(a: AgentView, now: string): string {
+  const g = groundOf(a.tower);
+  const status = a.activeNow ? '<em class="live">trabalhando</em>' : `<em>${a.lastActive ? escapeHtml(ago(a.lastActive, now)) : 'sem atividade'}</em>`;
+  return `<button class="card" data-agent="${escapeHtml(a.agent)}">
+    <div class="card-head">${dot(a.agent)}<strong>${escapeHtml(a.name)}</strong>${status}</div>
+    <div class="card-stats">
+      <span><b>${a.tower ? `≈ ${short(g.tokens)}` : '—'}</b>térreo</span>
+      <span><b>${a.consumption ? short(a.consumption.week.fresh) : '—'}</b>semana</span>
+      <span><b>${groupByModel(a.models).length}</b>modelos</span>
+    </div>${weekBar(a)}</button>`;
+}
+
+function projectCard(p: ProjectLegend, nameOf: (a: string) => string): string {
+  return `<button class="card" data-project="${escapeHtml(p.name)}">
+    <div class="card-head">${swatch(p.color)}<strong>${escapeHtml(p.name)}</strong></div>
+    <div class="card-line">${n(p.buildings)} prédios · ${short(p.nodes)} símbolos</div>
+    <div class="card-line muted-inline">${p.agents.length ? `energia de ${p.agents.map((a) => escapeHtml(nameOf(a))).join(', ')}` : 'sem energia'}</div></button>`;
+}
+
+function legend(): string {
+  const row = (color: number, text: string) => `<li>${swatch(color)}${escapeHtml(text)}</li>`;
+  return `<details class="legend-box"><summary>Legenda</summary>
+    <h4>Andares das torres</h4><ul class="legend">${SECTIONS.map((s) => row(SECTION_COLOR[s], SECTION_NAMES[s])).join('')}</ul>
+    <h4>Livros (skills)</h4><ul class="legend">${(Object.keys(ORIGIN_COLOR) as Origin[]).map((o) => row(ORIGIN_COLOR[o], ORIGIN_NAMES[o])).join('')}</ul>
+    <h4>Antenas (MCP)</h4><ul class="legend">${row(MCP_COLOR.local, 'local · baixa')}${row(MCP_COLOR.remote, 'remoto · alta')}</ul>
+    <p class="muted">Altura do andar = peso do conteúdo. Vidro = consumo. Cabo aceso = a IA trabalha no projeto agora.</p></details>`;
+}
+
+/** Left sidebar: agents, projects and the civic district as cards (a click opens the piece and takes the camera there); legend and view options below. */
 export function renderSummary(
   el: HTMLElement,
-  tools: ToolSummary[],
+  agents: AgentView[],
   projects: ProjectLegend[],
-  on: { onPulses(on: boolean): void; onShowInactive(on: boolean): void },
+  lib: Library,
+  view: { pulses: boolean; showInactive: boolean },
+  now: string,
+  nameOf: (a: string) => string,
+  on: SidebarHandlers,
 ): void {
-  const legend = SECTIONS.map((s) => `<li><span class="swatch" style="background:${hex(SECTION_COLOR[s])}"></span>${escapeHtml(SECTION_NAMES[s])}</li>`).join('');
-  const projectList = projects
-    .map((p) => `<li><span class="swatch" style="background:${hex(p.color)}"></span>${escapeHtml(p.name)} <span class="muted-inline">${p.agents.length ? `← ${p.agents.map(escapeHtml).join(', ')}` : 'sem energia'}</span></li>`)
-    .join('');
-  const totalWeek = tools.reduce((s, t) => s + (t.consumption?.week.fresh ?? 0), 0);
-
-  el.innerHTML = `<h1>cityPhy</h1><div class="tabs-host"></div>
-    <label class="toggle"><input type="checkbox" class="opt-pulses" checked> pulsos de luz</label>
-    <label class="toggle"><input type="checkbox" class="opt-inactive" checked> mostrar cabos inativos</label>
-    <p class="muted">Cabo aceso = a IA está trabalhando no projeto agora; apagado = já trabalhou.</p>`;
-  renderTabs(el.querySelector('.tabs-host')!, [
-    {
-      label: 'Geral',
-      html: `<p>${tools.length} ferramenta(s) · semana ≈ ${num(totalWeek)} tokens novos</p>
-        <h3>Andares das torres</h3><ul class="legend">${legend}</ul>
-        <h3>Projetos</h3><ul class="legend">${projectList}</ul>
-        <p class="muted">Altura do andar = peso do conteúdo. Passe o mouse; clique para abrir.</p>`,
-    },
-    ...tools.map((t) => ({ label: escapeHtml(t.name), html: toolTab(t, projects) })),
-  ]);
+  const shared = lib.skills.filter((s) => s.agents.length > 1).length;
+  el.innerHTML = `
+    <header class="brand"><div><h1>cityPhy</h1><p>mapa local das suas IAs</p></div><button class="ghost" data-overview="1" title="Volta a câmera para a cidade inteira">ver cidade toda</button></header>
+    <h3>IAs <span>${agents.length}</span></h3>${agents.map((a) => agentCard(a, now)).join('')}
+    <h3>Projetos <span>${projects.length}</span></h3>${projects.map((p) => projectCard(p, nameOf)).join('') || '<p class="muted">Nenhum projeto com grafo.</p>'}
+    <h3>Centro cívico</h3>
+    <button class="card" data-library="1">
+      <div class="card-head"><strong>Biblioteca e rádio</strong></div>
+      <div class="card-stats"><span><b>${n(lib.skills.length)}</b>skills</span><span><b>${n(shared)}</b>compartilhadas</span><span><b>${n(lib.mcps.length)}</b>MCP</span></div>
+    </button>
+    ${legend()}
+    <div class="view-opts">
+      <label class="toggle"><input type="checkbox" class="opt-pulses"${view.pulses ? ' checked' : ''}> pulsos de luz</label>
+      <label class="toggle"><input type="checkbox" class="opt-inactive"${view.showInactive ? ' checked' : ''}> cabos inativos</label>
+    </div>`;
+  el.querySelectorAll<HTMLElement>('[data-agent]').forEach((b) => b.addEventListener('click', () => on.onAgent(b.dataset.agent!)));
+  el.querySelectorAll<HTMLElement>('[data-project]').forEach((b) => b.addEventListener('click', () => on.onProject(b.dataset.project!)));
+  el.querySelector('[data-library]')!.addEventListener('click', () => on.onLibrary());
+  el.querySelector('[data-overview]')!.addEventListener('click', () => on.onOverview());
   el.querySelector('.opt-pulses')!.addEventListener('change', (e) => on.onPulses((e.target as HTMLInputElement).checked));
   el.querySelector('.opt-inactive')!.addEventListener('change', (e) => on.onShowInactive((e.target as HTMLInputElement).checked));
 }

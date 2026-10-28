@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import * as THREE from 'three';
-import { CROSS_STREET_Z, SIDEWALK, STREET_WIDTH, STREET_X, layoutProjects, layoutTowers, type Lot } from '../src/scene/cityLayout.ts';
+import { CROSS_STREET_Z, SIDEWALK, STREET_WIDTH, STREET_X, layoutCivic, layoutProjects, layoutTowers, type Lot } from '../src/scene/cityLayout.ts';
 import { CROSSARM_Y, lampPosts, type LampPost } from '../src/scene/streetLamps.ts';
 import { routePowerLine } from '../src/scene/powerLine.ts';
 
@@ -12,10 +12,10 @@ const WALK_Z: [number, number] = [ROAD_Z[0] - SIDEWALK, ROAD_Z[1] + SIDEWALK];
 const inside = (v: number, [a, b]: [number, number]) => v > a && v < b;
 const overlaps = (lo: number, hi: number, [a, b]: [number, number]) => lo < b && hi > a;
 
-const lots = (): Lot[] => [
-  ...layoutTowers([0, 2, 5]).map((s) => s.lot),
-  ...layoutProjects([33, 6, 60, 15], 6).map((s) => s.lot),
-];
+const lots = (): Lot[] => {
+  const civic = layoutCivic(60, 6).lot;
+  return [...layoutTowers([0, 2, 5]).map((s) => s.lot), civic, ...layoutProjects([33, 6, 60, 15], 6, civic.minZ - 8).map((s) => s.lot)];
+};
 
 describe('lots', () => {
   it('never touch a street or its sidewalks', () => {

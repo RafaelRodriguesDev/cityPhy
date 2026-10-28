@@ -5,6 +5,37 @@ All notable changes to cityPhy. Format based on [Keep a Changelog](https://keepa
 ## [Unreleased]
 
 ### Added
+- **Maquete as the main page**: a light, model-like city (flat colors, outlines, sun shadows, orthographic view) with
+  towers that have window rows and setbacks, measuring-glass consumption, a library building with columns and a
+  pediment, lattice radio masts with animated waves for MCP servers, and condominiums with houses and blocks. The first
+  city stays at `/classica.html`.
+- **Antenna station behind each condominium**: the MCP servers the project actually used, from its conversations
+  (one lattice mast per server, taller with more calls, gray when the agent app brought it), wired by a dashed arc to
+  the same server in the civic radio park when it is configured. Above six servers it becomes a radio central: a
+  building with masts on its roof and the real total on its sign. The civic radio park stays the catalog of what is
+  installed.
+- **Savings and control per project**: tokens the graph kept out of the conversation (whole files vs. graph answers),
+  what entered the conversation per tool kind, and per agent how many sessions cityPhy saw live, imported later from
+  old logs, or never saw.
+- **Conversations, skills and MCP use**: per project, every conversation with its title, date and the skills and MCP
+  servers it used; a searchable skills tab in the library (used / never used / per agent) and MCP calls per server,
+  including servers the agent app brings itself. Only names and counts are read; agents whose logs do not record tool
+  calls are marked as such.
+- **Civic district** on the corner of the main crossing: a **library** with one book per skill (shared skills first,
+  then one bookcase per agent; color = where it came from: the agent's folder, synced from the account, a plugin or the
+  project) and a **radio park** with one antenna per MCP server (tall and orange when remote). Read-only `/api/library`
+  inventory of each agent's skills, enabled plugins and MCP servers: names, sizes, dates and the host of remote
+  servers only; a skill's text is hashed to flag diverging copies, never kept.
+- **HUD** with four numbers (fixed context per session, consumption of the week, agents working now, things to look
+  at) and a sidebar of cards per agent, project and the civic district; a card opens the piece and takes the camera
+  there, "ver cidade toda" brings it back.
+- **Four fixed blocks** in every panel (agent, floor, consumption, project, skill, MCP server): Contexto, Entrada,
+  Saída and Esperado × real, the last one listing what looks off (diverging skill copies, agents working on a project
+  they are not registered for, a heavy always-loaded file, a remote MCP server…).
+- **Consumption glass fills without a limit**: today against the busiest day of the last 7, the week against 7 such
+  days; a plan window that already reset is ignored until the tool reports the new one.
+- **Codex agent tower** generated from local rules, skills and session metadata; conversation messages are never
+  copied into the city.
 - **Live power lines**: a cable is lit only while the agent is working on the project (log writes within
   `activeWindowMinutes`, default 15), dark otherwise; the page polls `/api/activity` every 30 s, inactive cables can be
   hidden and the project panel shows when each agent last worked there.
@@ -37,6 +68,8 @@ All notable changes to cityPhy. Format based on [Keep a Changelog](https://keepa
   (`npm run dev:example`), tests for the city rules, README in Portuguese and English, credits.
 
 ### Fixed
+- Claude Code calls copied into a resumed conversation's log were counted twice in consumption and usage.
+- Model totals in the agent panel mixed cache reads with fresh tokens; they are now shown apart.
 - File events are recorded in the project that holds the file, not in the folder where the session runs.
 - Agent databases are opened read-only.
 - First animation frame could step backwards and produce NaN positions.
